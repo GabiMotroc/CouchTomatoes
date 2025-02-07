@@ -4,7 +4,7 @@ services:
 
   plex:
     image: lscr.io/linuxserver/plex:latest
-    container_name: plex
+    container_name: ${PLEX_NAME}
     environment:
       - PUID=1000
       - PGID=1000
@@ -15,32 +15,32 @@ services:
       - "./tv:/tv"
     restart: unless-stopped
     networks:
-      - media_server
+      - media_network
 
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
-    container_name: qbittorrent
+    container_name: ${QBITTORRENT_NAME}
     ports:
-      - "8080:8080"  # Web UI
+      - "${QBITTORRENT_PORT}:${QBITTORRENT_PORT}"  # Web UI
       - "6881:6881"  # Torrent port
       - "6881:6881/udp"
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=Etc/UTC
-      - WEBUI_PORT=8080
+      - WEBUI_PORT=${QBITTORRENT_PORT}
     volumes:
       - "./config/qbittorrent:/config"
       - "./downloads:/downloads"
     restart: unless-stopped
     networks:
-      - media_server
+      - media_network
 
   radarr:
     image: lscr.io/linuxserver/radarr:latest
-    container_name: radarr
+    container_name: ${RADARR_NAME}
     ports:
-      - "7878:7878"
+      - "${RADARR_PORT}:${RADARR_PORT}"
     environment:
       - PUID=1000
       - PGID=1000
@@ -51,13 +51,13 @@ services:
       - "./downloads:/downloads"
     restart: unless-stopped
     networks:
-      - media_server
+      - media_network
 
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
-    container_name: sonarr
+    container_name: ${SONARR_NAME}
     ports:
-      - "8989:8989"
+      - "${SONARR_PORT}:${SONARR_PORT}"
     environment:
       - PUID=1000
       - PGID=1000
@@ -68,13 +68,13 @@ services:
       - "./downloads:/downloads"
     restart: unless-stopped
     networks:
-      - media_server
+      - media_network
 
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
-    container_name: prowlarr
+    container_name: ${PROWLARR_NAME}
     ports:
-      - "9696:9696"
+      - "${PROWLARR_PORT}:${PROWLARR_PORT}"
     environment:
       - PUID=1000
       - PGID=1000
@@ -83,7 +83,7 @@ services:
       - "./config/prowlarr:/config"
     restart: unless-stopped
     networks:
-      - media_server
+      - media_network
 
   nginx:
     image: nginx:latest
@@ -92,8 +92,10 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    env_file:
+      - .env
     volumes:
-      - ./config/nginx:/etc/nginx/conf.d
+      - ./config/nginx/default.conf.template:/etc/nginx/templates/default.conf.template
     depends_on:
       - plex
       - qbittorrent
@@ -101,9 +103,9 @@ services:
       - sonarr
       - prowlarr
     networks:
-      - media_server
+      - media_network
 
 
 networks:
-  media_server:
+  media_network:
     driver: bridge

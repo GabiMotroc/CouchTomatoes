@@ -1,0 +1,59 @@
+server {
+    listen 80;
+    server_name ${PLEX_NAME}.local;
+
+    location / {
+        proxy_pass http://${PLEX_NAME}:${PLEX_PORT}/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+server {
+    listen 80;
+    server_name ${QBITTORRENT_NAME}.local;
+
+    location / {
+        proxy_pass http://${QBITTORRENT_NAME}:${QBITTORRENT_PORT}/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+server {
+    listen 80;
+    server_name ${RADARR_NAME}.local;
+
+    location / {
+        proxy_pass http://${RADARR_NAME}:${RADARR_PORT}/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+server {
+    listen 80;
+    server_name ${SONARR_NAME}.local;
+
+    location / {
+        proxy_pass http://${SONARR_NAME}:${SONARR_PORT}/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+server {
+    listen 80;
+    server_name ${PROWLARR_NAME}.local;
+
+    location / {
+        proxy_pass http://${PROWLARR_NAME}:${PROWLARR_PORT}/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
