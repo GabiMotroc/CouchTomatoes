@@ -11,8 +11,8 @@ services:
       - VERSION=docker
     volumes:
       - "./config/plex:/config"
-      - "./movies:/movies"
-      - "./tv:/tv"
+      - "${MOVIES_DIR}:/movies"
+      - "${SHOWS_DIR}:/tv"
     restart: unless-stopped
     networks:
       - media_network
@@ -31,7 +31,7 @@ services:
       - WEBUI_PORT=${QBITTORRENT_PORT}
     volumes:
       - "./config/qbittorrent:/config"
-      - "./downloads:/downloads"
+      - "${DOWNLOADS_DIR}:/downloads"
     restart: unless-stopped
     networks:
       - media_network
@@ -47,8 +47,8 @@ services:
       - TZ=Etc/UTC
     volumes:
       - "./config/radarr:/config"
-      - "./movies:/movies"
-      - "./downloads:/downloads"
+      - "${MOVIES_DIR}:/movies"
+      - "${DOWNLOADS_DIR}:/downloads"
     restart: unless-stopped
     networks:
       - media_network
@@ -64,8 +64,8 @@ services:
       - TZ=Etc/UTC
     volumes:
       - "./config/sonarr:/config"
-      - "./tv:/tv"
-      - "./downloads:/downloads"
+      - "${SHOWS_DIR}:/tv"
+      - "${DOWNLOADS_DIR}:/downloads"
     restart: unless-stopped
     networks:
       - media_network

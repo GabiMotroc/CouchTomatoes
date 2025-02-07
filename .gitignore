@@ -1,12 +1,1 @@
-﻿config/plex/Library
-config/prowlarr/asp
-config/prowlarr/logs
-config/prowlarr/Definitions
-config/qbittorrent/qBittorrent
-config/radarr/asp
-config/radarr/logs
-config/sonarr/asp
-config/sonarr/logs
-config/sonarr/*
-config/radarr
-config/prowlarr
+﻿
