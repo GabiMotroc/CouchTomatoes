@@ -1,0 +1,109 @@
+version: "3.9"
+
+services:
+
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - VERSION=docker
+    volumes:
+      - "./config/plex:/config"
+      - "./movies:/movies"
+      - "./tv:/tv"
+    restart: unless-stopped
+    networks:
+      - media_server
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    ports:
+      - "8080:8080"  # Web UI
+      - "6881:6881"  # Torrent port
+      - "6881:6881/udp"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - WEBUI_PORT=8080
+    volumes:
+      - "./config/qbittorrent:/config"
+      - "./downloads:/downloads"
+    restart: unless-stopped
+    networks:
+      - media_server
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    ports:
+      - "7878:7878"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - "./config/radarr:/config"
+      - "./movies:/movies"
+      - "./downloads:/downloads"
+    restart: unless-stopped
+    networks:
+      - media_server
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    ports:
+      - "8989:8989"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - "./config/sonarr:/config"
+      - "./tv:/tv"
+      - "./downloads:/downloads"
+    restart: unless-stopped
+    networks:
+      - media_server
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    ports:
+      - "9696:9696"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - "./config/prowlarr:/config"
+    restart: unless-stopped
+    networks:
+      - media_server
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./config/nginx:/etc/nginx/conf.d
+    depends_on:
+      - plex
+      - qbittorrent
+      - radarr
+      - sonarr
+      - prowlarr
+    networks:
+      - media_server
+
+
+networks:
+  media_server:
+    driver: bridge
