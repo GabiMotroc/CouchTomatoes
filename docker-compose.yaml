@@ -6,14 +6,17 @@ services:
     image: lscr.io/linuxserver/plex:latest
     container_name: ${PLEX_NAME}
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=${USER_ID}
+      - PGID=${GROUP_ID}
       - VERSION=docker
     volumes:
       - "./config/plex:/config"
       - "${MOVIES_DIR}:/movies"
       - "${SHOWS_DIR}:/tv"
     restart: unless-stopped
+    ports:
+      - "${PLEX_PORT}:${PLEX_PORT}/tcp"
+      - 32469:32469/udp
     networks:
       - media_network
 
@@ -25,9 +28,9 @@ services:
       - "6881:6881"  # Torrent port
       - "6881:6881/udp"
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
+      - PUID=${USER_ID}
+      - PGID=${GROUP_ID}
+      - TZ=${TIMEZONE}
       - WEBUI_PORT=${QBITTORRENT_PORT}
     volumes:
       - "./config/qbittorrent:/config"
@@ -42,13 +45,17 @@ services:
     ports:
       - "${RADARR_PORT}:${RADARR_PORT}"
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
+      - PUID=${USER_ID}
+      - PGID=${GROUP_ID}
+      - TZ=${TIMEZONE}
     volumes:
       - "./config/radarr:/config"
       - "${MOVIES_DIR}:/movies"
       - "${DOWNLOADS_DIR}:/downloads"
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "${RADARR_NAME}.${DOMAIN}:${RADARR_PORT}/ping" ]
+      interval: 30s
+      retries: 10
     restart: unless-stopped
     networks:
       - media_network
@@ -59,13 +66,17 @@ services:
     ports:
       - "${SONARR_PORT}:${SONARR_PORT}"
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
+      - PUID=${USER_ID}
+      - PGID=${GROUP_ID}
+      - TZ=${TIMEZONE}
     volumes:
       - "./config/sonarr:/config"
       - "${SHOWS_DIR}:/tv"
       - "${DOWNLOADS_DIR}:/downloads"
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "${SONARR_NAME}.${DOMAIN}:${SONARR_PORT}/ping" ]
+      interval: 30s
+      retries: 10
     restart: unless-stopped
     networks:
       - media_network
@@ -76,11 +87,37 @@ services:
     ports:
       - "${PROWLARR_PORT}:${PROWLARR_PORT}"
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
+      - PUID=${USER_ID}
+      - PGID=${GROUP_ID}
+      - TZ=${TIMEZONE}
     volumes:
       - "./config/prowlarr:/config"
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "${PROWLARR_NAME}.${DOMAIN}:${PROWLARR_PORT}/ping" ]
+      interval: 30s
+      retries: 10
+    restart: unless-stopped
+    networks:
+      - media_network
+
+  overseerr:
+    image: sctx/overseerr:latest
+    container_name: ${OVERSEERR_NAME}
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=Asia/Tokyo
+      - PORT=${OVERSEERR_PORT} #optional
+      - RADARR_API_KEY=${RADARR_API_KEY}
+      - RADARR_URL=https://radarr.local  # No need for ports
+      - SONARR_API_KEY=${SONARR_API_KEY}
+      - SONARR_URL=https://sonarr.local
+      - PLEX_URL=https://plex.local
+      - PLEX_TOKEN=${PLEX_TOKEN}
+      - AUTH_METHOD=plex
+    ports:
+      - ${OVERSEERR_PORT}:${OVERSEERR_PORT}
+    volumes:
+      - "./config/overseerr:/app/config"
     restart: unless-stopped
     networks:
       - media_network
@@ -102,6 +139,7 @@ services:
       - radarr
       - sonarr
       - prowlarr
+      - overseerr
     networks:
       - media_network
 

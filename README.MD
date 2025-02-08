@@ -6,7 +6,5 @@ Add the subdomains to your Windows hosts file (C:\Windows\System32\drivers\etc\h
 127.0.0.1 radarr.local
 127.0.0.1 sonarr.local
 127.0.0.1 prowlarr.local
+127.0.0.1 overseerr.local
 ```
-
-User: 
-Password:
