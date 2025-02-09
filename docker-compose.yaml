@@ -1,10 +1,10 @@
-x-base: &base
+x-service: &service
   restart: unless-stopped
   networks:
     - media_network
 
 x-user: &user
-  <<: *base
+  <<: *service
   environment:
     - PUID=${USER_ID}
     - PGID=${GROUP_ID}
@@ -12,33 +12,33 @@ x-user: &user
 
 services:
   otel-collector:
-    <<: *base
+    <<: *service
     image: otel/opentelemetry-collector:latest
     container_name: otel-collector
     command: ["--config=/etc/otel-collector-config.yaml"]
     volumes:
       - ./config/otel/otel-collector-config.yaml:/etc/otel-collector-config.yaml
     ports:
-      - "4317:4317"  # OTLP gRPC
-      - "4318:4318"  # OTLP HTTP
-      - "8888:8888"  # Debugging
-      - "9464:9464"  # Prometheus Exporter
+      - 4317:4317
+      - 4318:4318
+      - 8888:8888
+      - 9464:9464
 
   prometheus:
-    <<: *base
+    <<: *service
     image: prom/prometheus:latest
     container_name: prometheus
     volumes:
       - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
-      - "9090:9090"
+      - 9090:9090
 
   grafana:
-    <<: *base
+    <<: *service
     image: grafana/grafana:latest
     container_name: grafana
     ports:
-      - "3000:3000"
+      - 3000:3000
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin  # Change this in production!
@@ -122,13 +122,7 @@ services:
     container_name: ${OVERSEERR_NAME}
     environment:
       - LOG_LEVEL=debug
-      - PORT=${OVERSEERR_PORT} #optional
-      - RADARR_API_KEY=${RADARR_API_KEY}
-      - RADARR_URL=https://radarr.local  # No need for ports
-      - SONARR_API_KEY=${SONARR_API_KEY}
-      - SONARR_URL=https://sonarr.local
-      - PLEX_URL=https://plex.local
-      - PLEX_TOKEN=${PLEX_TOKEN}
+      - PORT=${OVERSEERR_PORT}
       - AUTH_METHOD=plex
     ports:
       - ${OVERSEERR_PORT}:${OVERSEERR_PORT}
@@ -158,7 +152,7 @@ services:
       - ${EMBY_PORT}:${EMBY_INTERNAL_PORT}
 
   nginx:
-    <<: *base
+    <<: *service
     image: nginx:latest
     container_name: nginx
     ports:
