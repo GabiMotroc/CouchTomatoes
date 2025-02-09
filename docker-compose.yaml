@@ -1,7 +1,6 @@
 version: "3.9"
 
 services:
-
   plex:
     image: lscr.io/linuxserver/plex:latest
     container_name: ${PLEX_NAME}
@@ -10,12 +9,12 @@ services:
       - PGID=${GROUP_ID}
       - VERSION=docker
     volumes:
-      - "./config/plex:/config"
-      - "${MOVIES_DIR}:/movies"
-      - "${SHOWS_DIR}:/tv"
+      - ./config/plex:/config
+      - ${MOVIES_DIR}:/movies
+      - ${SHOWS_DIR}:/tv
     restart: unless-stopped
     ports:
-      - "${PLEX_PORT}:${PLEX_PORT}/tcp"
+      - ${PLEX_PORT}:${PLEX_PORT}/tcp
       - 32469:32469/udp
     networks:
       - media_network
@@ -24,17 +23,17 @@ services:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: ${QBITTORRENT_NAME}
     ports:
-      - "${QBITTORRENT_PORT}:${QBITTORRENT_PORT}"  # Web UI
-      - "6881:6881"  # Torrent port
-      - "6881:6881/udp"
+      - ${QBITTORRENT_PORT}:${QBITTORRENT_PORT}  # Web UI
+      - 6881:6881  # Torrent port
+      - 6881:6881/udp
     environment:
       - PUID=${USER_ID}
       - PGID=${GROUP_ID}
       - TZ=${TIMEZONE}
       - WEBUI_PORT=${QBITTORRENT_PORT}
     volumes:
-      - "./config/qbittorrent:/config"
-      - "${DOWNLOADS_DIR}:/downloads"
+      - ./config/qbittorrent:/config
+      - ${DOWNLOADS_DIR}:/downloads
     restart: unless-stopped
     networks:
       - media_network
@@ -43,15 +42,15 @@ services:
     image: lscr.io/linuxserver/radarr:latest
     container_name: ${RADARR_NAME}
     ports:
-      - "${RADARR_PORT}:${RADARR_PORT}"
+      - ${RADARR_PORT}:${RADARR_PORT}
     environment:
       - PUID=${USER_ID}
       - PGID=${GROUP_ID}
       - TZ=${TIMEZONE}
     volumes:
-      - "./config/radarr:/config"
-      - "${MOVIES_DIR}:/movies"
-      - "${DOWNLOADS_DIR}:/downloads"
+      - ./config/radarr:/config
+      - ${MOVIES_DIR}:/movies
+      - ${DOWNLOADS_DIR}:/downloads
     healthcheck:
       test: [ "CMD", "curl", "--fail", "${RADARR_NAME}.${DOMAIN}:${RADARR_PORT}/ping" ]
       interval: 30s
@@ -64,15 +63,15 @@ services:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: ${SONARR_NAME}
     ports:
-      - "${SONARR_PORT}:${SONARR_PORT}"
+      - ${SONARR_PORT}:${SONARR_PORT}
     environment:
       - PUID=${USER_ID}
       - PGID=${GROUP_ID}
       - TZ=${TIMEZONE}
     volumes:
-      - "./config/sonarr:/config"
-      - "${SHOWS_DIR}:/tv"
-      - "${DOWNLOADS_DIR}:/downloads"
+      - ./config/sonarr:/config
+      - ${SHOWS_DIR}:/tv
+      - ${DOWNLOADS_DIR}:/downloads
     healthcheck:
       test: [ "CMD", "curl", "--fail", "${SONARR_NAME}.${DOMAIN}:${SONARR_PORT}/ping" ]
       interval: 30s
@@ -85,13 +84,13 @@ services:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: ${PROWLARR_NAME}
     ports:
-      - "${PROWLARR_PORT}:${PROWLARR_PORT}"
+      - ${PROWLARR_PORT}:${PROWLARR_PORT}
     environment:
       - PUID=${USER_ID}
       - PGID=${GROUP_ID}
       - TZ=${TIMEZONE}
     volumes:
-      - "./config/prowlarr:/config"
+      - ./config/prowlarr:/config
     healthcheck:
       test: [ "CMD", "curl", "--fail", "${PROWLARR_NAME}.${DOMAIN}:${PROWLARR_PORT}/ping" ]
       interval: 30s
@@ -117,7 +116,41 @@ services:
     ports:
       - ${OVERSEERR_PORT}:${OVERSEERR_PORT}
     volumes:
-      - "./config/overseerr:/app/config"
+      - ./config/overseerr:/app/config
+    restart: unless-stopped
+    networks:
+      - media_network
+
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: ${JELLYFIN_NAME}
+    environment:
+      - PUID=${USER_ID}
+      - PGID=${GROUP_ID}
+      - TZ=${TIMEZONE}
+    volumes:
+      - ./config/jellyfin:/config
+      - ${SHOWS_DIR}:/data/tvshows
+      - ${MOVIES_DIR}:/data/movies
+    ports:
+      - ${JELLYFIN_PORT}:8096
+    restart: unless-stopped
+    networks:
+      - media_network
+
+  emby:
+    image: lscr.io/linuxserver/emby:latest
+    container_name: ${EMBY_NAME}
+    environment:
+      - PUID=${USER_ID}
+      - PGID=${GROUP_ID}
+      - TZ=${TIMEZONE}
+    volumes:
+      - ./config/emby:/config
+      - ${SHOWS_DIR}:/data/tvshows
+      - ${MOVIES_DIR}:/data/movies
+    ports:
+      - ${EMBY_PORT}:8096
     restart: unless-stopped
     networks:
       - media_network
@@ -140,6 +173,8 @@ services:
       - sonarr
       - prowlarr
       - overseerr
+      - jellyfin
+      - emby
     networks:
       - media_network
 
