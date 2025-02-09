@@ -88,7 +88,20 @@ server {
     server_name ${EMBY_NAME}.${DOMAIN};
 
     location / {
-        proxy_pass http://${EMBY_NAME}:${EMBY_INTERNAL_PORT}/;
+        proxy_pass http://${EMBY_NAME}:${EMBY_PORT}/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+
+server {
+    listen 80;
+    server_name ${HOMEPAGE_NAME}.${DOMAIN};
+
+    location / {
+        proxy_pass http://${HOMEPAGE_NAME}:${HOMEPAGE_PORT}/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

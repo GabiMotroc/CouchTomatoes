@@ -45,26 +45,12 @@ services:
     volumes:
       - ./config/grafana:/var/lib/grafana
 
-  plex:
-    <<: *user
-    image: lscr.io/linuxserver/plex:latest
-    container_name: ${PLEX_NAME}
-    environment:
-      - VERSION=docker
-    volumes:
-      - ./config/plex:/config
-      - ${MOVIES_DIR}:/movies
-      - ${SHOWS_DIR}:/tv
-    ports:
-      - ${PLEX_PORT}:${PLEX_PORT}/tcp
-      - 32469:32469/udp
-
   qbittorrent:
     <<: *user
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: ${QBITTORRENT_NAME}
     ports:
-      - ${QBITTORRENT_PORT}:${QBITTORRENT_PORT}  # Web UI
+      - ${QBITTORRENT_PORT}:${QBITTORRENT_PORT}
       - 6881:6881  # Torrent port
       - 6881:6881/udp
     environment:
@@ -77,8 +63,6 @@ services:
     <<: *user
     image: lscr.io/linuxserver/radarr:latest
     container_name: ${RADARR_NAME}
-    ports:
-      - ${RADARR_PORT}:${RADARR_PORT}
     volumes:
       - ./config/radarr:/config
       - ${MOVIES_DIR}:/movies
@@ -87,13 +71,29 @@ services:
       test: [ "CMD", "curl", "--fail", "${RADARR_NAME}.${DOMAIN}:${RADARR_PORT}/ping" ]
       interval: 30s
       retries: 10
+    ports:
+      - ${RADARR_PORT}:${RADARR_PORT}
+
+  radarr-4k:
+    <<: *user
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: ${RADARR_4K_NAME}
+    volumes:
+      - ./config/radarr_4k:/config
+      - ${MOVIES_4K_DIR}:/movies
+      - ${DOWNLOADS_DIR}:/downloads
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "${RADARR_4K_NAME}.${DOMAIN}:${RADARR_4K_INT_PORT}/ping" ]
+      interval: 30s
+      retries: 10
+    ports:
+      - ${RADARR_4K_PORT}:${RADARR_4K_INT_PORT}
+
 
   sonarr:
     <<: *user
     image: lscr.io/linuxserver/sonarr:latest
     container_name: ${SONARR_NAME}
-    ports:
-      - ${SONARR_PORT}:${SONARR_PORT}
     volumes:
       - ./config/sonarr:/config
       - ${SHOWS_DIR}:/tv
@@ -102,19 +102,37 @@ services:
       test: [ "CMD", "curl", "--fail", "${SONARR_NAME}.${DOMAIN}:${SONARR_PORT}/ping" ]
       interval: 30s
       retries: 10
+    ports:
+      - ${SONARR_PORT}:${SONARR_PORT}
+
+  sonarr-4k:
+    <<: *user
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: ${SONARR_4K_NAME}
+    volumes:
+      - ./config/sonarr_4k:/config
+      - ${SHOWS_4K_DIR}:/tv
+      - ${DOWNLOADS_DIR}:/downloads
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "${SONARR_4K_NAME}.${DOMAIN}:${SONARR_4K_PORT}/ping" ]
+      interval: 30s
+      retries: 10
+    ports:
+      - ${SONARR_4K_PORT}:${SONARR_4K_INT_PORT}
+
 
   prowlarr:
     <<: *user
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: ${PROWLARR_NAME}
-    ports:
-      - ${PROWLARR_PORT}:${PROWLARR_PORT}
     volumes:
       - ./config/prowlarr:/config
     healthcheck:
       test: [ "CMD", "curl", "--fail", "${PROWLARR_NAME}.${DOMAIN}:${PROWLARR_PORT}/ping" ]
       interval: 30s
       retries: 10
+    ports:
+      - ${PROWLARR_PORT}:${PROWLARR_PORT}
 
   overseerr:
     <<: *user
@@ -124,8 +142,6 @@ services:
       - LOG_LEVEL=debug
       - PORT=${OVERSEERR_PORT}
       - AUTH_METHOD=plex
-    ports:
-      - ${OVERSEERR_PORT}:${OVERSEERR_PORT}
     volumes:
       - ./config/overseerr:/app/config
 
@@ -136,9 +152,9 @@ services:
     volumes:
       - ./config/jellyfin:/config
       - ${SHOWS_DIR}:/data/tvshows
+      - ${SHOWS_4K_DIR}:/data/tvshows_4k
       - ${MOVIES_DIR}:/data/movies
-    ports:
-      - ${JELLYFIN_PORT}:${JELLYFIN_PORT}
+      - ${MOVIES_4K_DIR}:/data/movies_4k
 
   emby:
     <<: *user
@@ -147,9 +163,34 @@ services:
     volumes:
       - ./config/emby:/config
       - ${SHOWS_DIR}:/data/tvshows
+      - ${SHOWS_4K_DIR}:/data/tvshows_4k
       - ${MOVIES_DIR}:/data/movies
+      - ${MOVIES_4K_DIR}:/data/movies_4k
     ports:
-      - ${EMBY_PORT}:${EMBY_INTERNAL_PORT}
+      - ${EMBY_PORT}:${EMBY_PORT}
+
+  plex:
+    <<: *user
+    image: lscr.io/linuxserver/plex:latest
+    container_name: ${PLEX_NAME}
+    environment:
+      - VERSION=docker
+    volumes:
+      - ./config/plex:/config
+      - ${MOVIES_DIR}:/movies
+      - ${MOVIES_4K_DIR}:/movies_4k
+      - ${SHOWS_DIR}:/tv
+      - ${SHOWS_4K_DIR}:/tv_4k
+    ports:
+      - 32469:32469/udp
+
+
+  homepage:
+    <<: *user
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: ${HOMEPAGE_NAME}
+    volumes:
+      - ./config/homepage:/app/config
 
   nginx:
     <<: *service
@@ -162,6 +203,7 @@ services:
       - .env
     volumes:
       - ./config/nginx/default.conf.template:/etc/nginx/templates/default.conf.template
+      - ./config/nginx/couch-tomatoes.me.crt:/etc/ssl/certs/couch-tomatoes.me
     depends_on:
       - plex
       - qbittorrent
