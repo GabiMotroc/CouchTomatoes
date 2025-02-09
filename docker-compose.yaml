@@ -1,7 +1,18 @@
-version: "3.9"
+x-base: &base
+  restart: unless-stopped
+  networks:
+    - media_network
+
+x-user: &user
+  <<: *base
+  environment:
+    - PUID=${USER_ID}
+    - PGID=${GROUP_ID}
+    - TZ=${TIMEZONE}
 
 services:
   otel-collector:
+    <<: *base
     image: otel/opentelemetry-collector:latest
     container_name: otel-collector
     command: ["--config=/etc/otel-collector-config.yaml"]
@@ -12,22 +23,18 @@ services:
       - "4318:4318"  # OTLP HTTP
       - "8888:8888"  # Debugging
       - "9464:9464"  # Prometheus Exporter
-    restart: unless-stopped
-    networks:
-      - media_network
 
   prometheus:
+    <<: *base
     image: prom/prometheus:latest
     container_name: prometheus
     volumes:
       - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
-    restart: unless-stopped
-    networks:
-      - media_network
 
   grafana:
+    <<: *base
     image: grafana/grafana:latest
     container_name: grafana
     ports:
@@ -37,29 +44,23 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin  # Change this in production!
     volumes:
       - ./config/grafana:/var/lib/grafana
-    restart: unless-stopped
-    networks:
-      - media_network
 
   plex:
+    <<: *user
     image: lscr.io/linuxserver/plex:latest
     container_name: ${PLEX_NAME}
     environment:
-      - PUID=${USER_ID}
-      - PGID=${GROUP_ID}
       - VERSION=docker
     volumes:
       - ./config/plex:/config
       - ${MOVIES_DIR}:/movies
       - ${SHOWS_DIR}:/tv
-    restart: unless-stopped
     ports:
       - ${PLEX_PORT}:${PLEX_PORT}/tcp
       - 32469:32469/udp
-    networks:
-      - media_network
 
   qbittorrent:
+    <<: *user
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: ${QBITTORRENT_NAME}
     ports:
@@ -67,26 +68,17 @@ services:
       - 6881:6881  # Torrent port
       - 6881:6881/udp
     environment:
-      - PUID=${USER_ID}
-      - PGID=${GROUP_ID}
-      - TZ=${TIMEZONE}
       - WEBUI_PORT=${QBITTORRENT_PORT}
     volumes:
       - ./config/qbittorrent:/config
       - ${DOWNLOADS_DIR}:/downloads
-    restart: unless-stopped
-    networks:
-      - media_network
 
   radarr:
+    <<: *user
     image: lscr.io/linuxserver/radarr:latest
     container_name: ${RADARR_NAME}
     ports:
       - ${RADARR_PORT}:${RADARR_PORT}
-    environment:
-      - PUID=${USER_ID}
-      - PGID=${GROUP_ID}
-      - TZ=${TIMEZONE}
     volumes:
       - ./config/radarr:/config
       - ${MOVIES_DIR}:/movies
@@ -95,19 +87,13 @@ services:
       test: [ "CMD", "curl", "--fail", "${RADARR_NAME}.${DOMAIN}:${RADARR_PORT}/ping" ]
       interval: 30s
       retries: 10
-    restart: unless-stopped
-    networks:
-      - media_network
 
   sonarr:
+    <<: *user
     image: lscr.io/linuxserver/sonarr:latest
     container_name: ${SONARR_NAME}
     ports:
       - ${SONARR_PORT}:${SONARR_PORT}
-    environment:
-      - PUID=${USER_ID}
-      - PGID=${GROUP_ID}
-      - TZ=${TIMEZONE}
     volumes:
       - ./config/sonarr:/config
       - ${SHOWS_DIR}:/tv
@@ -116,35 +102,26 @@ services:
       test: [ "CMD", "curl", "--fail", "${SONARR_NAME}.${DOMAIN}:${SONARR_PORT}/ping" ]
       interval: 30s
       retries: 10
-    restart: unless-stopped
-    networks:
-      - media_network
 
   prowlarr:
+    <<: *user
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: ${PROWLARR_NAME}
     ports:
       - ${PROWLARR_PORT}:${PROWLARR_PORT}
-    environment:
-      - PUID=${USER_ID}
-      - PGID=${GROUP_ID}
-      - TZ=${TIMEZONE}
     volumes:
       - ./config/prowlarr:/config
     healthcheck:
       test: [ "CMD", "curl", "--fail", "${PROWLARR_NAME}.${DOMAIN}:${PROWLARR_PORT}/ping" ]
       interval: 30s
       retries: 10
-    restart: unless-stopped
-    networks:
-      - media_network
 
   overseerr:
+    <<: *user
     image: sctx/overseerr:latest
     container_name: ${OVERSEERR_NAME}
     environment:
       - LOG_LEVEL=debug
-      - TZ=Asia/Tokyo
       - PORT=${OVERSEERR_PORT} #optional
       - RADARR_API_KEY=${RADARR_API_KEY}
       - RADARR_URL=https://radarr.local  # No need for ports
@@ -157,48 +134,33 @@ services:
       - ${OVERSEERR_PORT}:${OVERSEERR_PORT}
     volumes:
       - ./config/overseerr:/app/config
-    restart: unless-stopped
-    networks:
-      - media_network
 
   jellyfin:
+    <<: *user
     image: lscr.io/linuxserver/jellyfin:latest
     container_name: ${JELLYFIN_NAME}
-    environment:
-      - PUID=${USER_ID}
-      - PGID=${GROUP_ID}
-      - TZ=${TIMEZONE}
     volumes:
       - ./config/jellyfin:/config
       - ${SHOWS_DIR}:/data/tvshows
       - ${MOVIES_DIR}:/data/movies
     ports:
-      - ${JELLYFIN_PORT}:8096
-    restart: unless-stopped
-    networks:
-      - media_network
+      - ${JELLYFIN_PORT}:${JELLYFIN_PORT}
 
   emby:
+    <<: *user
     image: lscr.io/linuxserver/emby:latest
     container_name: ${EMBY_NAME}
-    environment:
-      - PUID=${USER_ID}
-      - PGID=${GROUP_ID}
-      - TZ=${TIMEZONE}
     volumes:
       - ./config/emby:/config
       - ${SHOWS_DIR}:/data/tvshows
       - ${MOVIES_DIR}:/data/movies
     ports:
-      - ${EMBY_PORT}:8096
-    restart: unless-stopped
-    networks:
-      - media_network
+      - ${EMBY_PORT}:${EMBY_INTERNAL_PORT}
 
   nginx:
+    <<: *base
     image: nginx:latest
     container_name: nginx
-    restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
@@ -215,9 +177,6 @@ services:
       - overseerr
       - jellyfin
       - emby
-    networks:
-      - media_network
-
 
 networks:
   media_network:
