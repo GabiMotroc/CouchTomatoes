@@ -183,6 +183,11 @@ services:
       - ${SHOWS_4K_DIR}:/tv_4k
     ports:
       - 32469:32469/udp
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.http.routers.plex.rule=Host(`plex.couch-tomatoes.me`)"
+    #   - "traefik.http.routers.plex.entrypoints=websecure"
+    #   - "traefik.http.routers.plex.tls.certresolver=lets-encrypt"
 
 
   homepage:
@@ -191,6 +196,30 @@ services:
     container_name: ${HOMEPAGE_NAME}
     volumes:
       - ./config/homepage:/app/config
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.http.routers.homepage.rule=Host(`couch-tomatoes.me`)"
+    #   - "traefik.http.routers.homepage.entrypoints=websecure"
+    #   - "traefik.http.routers.homepage.tls.certresolver=lets-encrypt"
+
+
+  # traefix:
+  #   <<: *service
+  #   image: traefik:v3.0
+  #   container_name: traefik
+  #   restart: always
+  #   security_opt:
+  #     - no-new-privileges:true
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #     - ./config/traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+  #     - .config/acme.json:/acme.json
+  #   labels:
+  #     - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
 
   nginx:
     <<: *service

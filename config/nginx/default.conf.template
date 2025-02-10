@@ -107,3 +107,23 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
 }
+
+server {
+    listen 443;
+    server_name test.${DOMAIN};
+    location / {
+        return 200 'gangnam style!';
+        add_header Content-Type text/plain;
+
+    }
+}
+
+server {
+    listen 443;
+    server_name ${DOMAIN};
+    location / {
+        return 200 'gangnam style!';
+        add_header Content-Type text/plain;
+
+    }
+}
