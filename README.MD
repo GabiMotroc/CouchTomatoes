@@ -1,3 +1,5 @@
+# CouchTomatoes
+
 CouchTomatoes (a word play on couch potato and RottenTomatoes) is a personal self hosted media streaming configuration
 
 Add the subdomains to your Windows hosts file (C:\Windows\System32\drivers\etc\hosts):
