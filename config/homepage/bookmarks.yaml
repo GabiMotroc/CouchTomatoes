@@ -1,0 +1,13 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/configs/bookmarks
+
+- Developer:
+    - Github:
+        - abbr: GH
+          href: https://github.com/GabiMotroc
+
+- Social:
+    - LinkedIn:
+        - abbr: IN
+          href: https://www.linkedin.com/in/gabi-motroc/

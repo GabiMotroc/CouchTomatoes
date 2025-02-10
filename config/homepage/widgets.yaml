@@ -1,0 +1,17 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/configs/info-widgets/
+
+- greeting:
+    text_size: 3xl
+    text: Couch Tomatoes
+
+- resources:
+    cpu: true
+    memory: true
+    disk: /
+    cputemp: true
+    tempmin: 0 # optional, minimum cpu temp
+    tempmax: 100 # optional, maximum cpu temp
+    uptime: true
+    units: metric # on

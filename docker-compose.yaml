@@ -1,0 +1,248 @@
+x-service: &service
+  restart: unless-stopped
+  networks:
+    - media_network
+
+x-user: &user
+  <<: *service
+  environment:
+    - PUID=${USER_ID}
+    - PGID=${GROUP_ID}
+    - TZ=${TIMEZONE}
+
+services:
+  otel-collector:
+    <<: *service
+    image: otel/opentelemetry-collector:latest
+    container_name: otel-collector
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./config/otel/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - 4317:4317
+      - 4318:4318
+      - 8888:8888
+      - 9464:9464
+
+  prometheus:
+    <<: *service
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - 9090:9090
+
+  grafana:
+    <<: *service
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - 3000:3000
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin  # Change this in production!
+    volumes:
+      - ./config/grafana:/var/lib/grafana
+
+  qbittorrent:
+    <<: *user
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: ${QBITTORRENT_NAME}
+    ports:
+      - ${QBITTORRENT_PORT}:${QBITTORRENT_PORT}
+      - 6881:6881  # Torrent port
+      - 6881:6881/udp
+    environment:
+      - WEBUI_PORT=${QBITTORRENT_PORT}
+    volumes:
+      - ./config/qbittorrent:/config
+      - ${DOWNLOADS_DIR}:/downloads
+
+  radarr:
+    <<: *user
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: ${RADARR_NAME}
+    volumes:
+      - ./config/radarr:/config
+      - ${MOVIES_DIR}:/movies
+      - ${DOWNLOADS_DIR}:/downloads
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "${RADARR_NAME}.${DOMAIN}:${RADARR_PORT}/ping" ]
+      interval: 30s
+      retries: 10
+    ports:
+      - ${RADARR_PORT}:${RADARR_PORT}
+
+  radarr-4k:
+    <<: *user
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: ${RADARR_4K_NAME}
+    volumes:
+      - ./config/radarr_4k:/config
+      - ${MOVIES_4K_DIR}:/movies
+      - ${DOWNLOADS_DIR}:/downloads
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "${RADARR_4K_NAME}.${DOMAIN}:${RADARR_4K_INT_PORT}/ping" ]
+      interval: 30s
+      retries: 10
+    ports:
+      - ${RADARR_4K_PORT}:${RADARR_4K_INT_PORT}
+
+
+  sonarr:
+    <<: *user
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: ${SONARR_NAME}
+    volumes:
+      - ./config/sonarr:/config
+      - ${SHOWS_DIR}:/tv
+      - ${DOWNLOADS_DIR}:/downloads
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "${SONARR_NAME}.${DOMAIN}:${SONARR_PORT}/ping" ]
+      interval: 30s
+      retries: 10
+    ports:
+      - ${SONARR_PORT}:${SONARR_PORT}
+
+  sonarr-4k:
+    <<: *user
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: ${SONARR_4K_NAME}
+    volumes:
+      - ./config/sonarr_4k:/config
+      - ${SHOWS_4K_DIR}:/tv
+      - ${DOWNLOADS_DIR}:/downloads
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "${SONARR_4K_NAME}.${DOMAIN}:${SONARR_4K_PORT}/ping" ]
+      interval: 30s
+      retries: 10
+    ports:
+      - ${SONARR_4K_PORT}:${SONARR_4K_INT_PORT}
+
+
+  prowlarr:
+    <<: *user
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: ${PROWLARR_NAME}
+    volumes:
+      - ./config/prowlarr:/config
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "${PROWLARR_NAME}.${DOMAIN}:${PROWLARR_PORT}/ping" ]
+      interval: 30s
+      retries: 10
+    ports:
+      - ${PROWLARR_PORT}:${PROWLARR_PORT}
+
+  overseerr:
+    <<: *user
+    image: sctx/overseerr:latest
+    container_name: ${OVERSEERR_NAME}
+    environment:
+      - LOG_LEVEL=debug
+      - PORT=${OVERSEERR_PORT}
+      - AUTH_METHOD=plex
+    volumes:
+      - ./config/overseerr:/app/config
+
+  jellyfin:
+    <<: *user
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: ${JELLYFIN_NAME}
+    volumes:
+      - ./config/jellyfin:/config
+      - ${SHOWS_DIR}:/data/tvshows
+      - ${SHOWS_4K_DIR}:/data/tvshows_4k
+      - ${MOVIES_DIR}:/data/movies
+      - ${MOVIES_4K_DIR}:/data/movies_4k
+
+  emby:
+    <<: *user
+    image: lscr.io/linuxserver/emby:latest
+    container_name: ${EMBY_NAME}
+    volumes:
+      - ./config/emby:/config
+      - ${SHOWS_DIR}:/data/tvshows
+      - ${SHOWS_4K_DIR}:/data/tvshows_4k
+      - ${MOVIES_DIR}:/data/movies
+      - ${MOVIES_4K_DIR}:/data/movies_4k
+    ports:
+      - ${EMBY_PORT}:${EMBY_PORT}
+
+  plex:
+    <<: *user
+    image: lscr.io/linuxserver/plex:latest
+    container_name: ${PLEX_NAME}
+    environment:
+      - VERSION=docker
+    volumes:
+      - ./config/plex:/config
+      - ${MOVIES_DIR}:/movies
+      - ${MOVIES_4K_DIR}:/movies_4k
+      - ${SHOWS_DIR}:/tv
+      - ${SHOWS_4K_DIR}:/tv_4k
+    ports:
+      - 32469:32469/udp
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.http.routers.plex.rule=Host(`plex.couch-tomatoes.me`)"
+    #   - "traefik.http.routers.plex.entrypoints=websecure"
+    #   - "traefik.http.routers.plex.tls.certresolver=lets-encrypt"
+
+
+  homepage:
+    <<: *user
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: ${HOMEPAGE_NAME}
+    volumes:
+      - ./config/homepage:/app/config
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.http.routers.homepage.rule=Host(`couch-tomatoes.me`)"
+    #   - "traefik.http.routers.homepage.entrypoints=websecure"
+    #   - "traefik.http.routers.homepage.tls.certresolver=lets-encrypt"
+
+
+  # traefix:
+  #   <<: *service
+  #   image: traefik:v3.0
+  #   container_name: traefik
+  #   restart: always
+  #   security_opt:
+  #     - no-new-privileges:true
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #     - ./config/traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+  #     - .config/acme.json:/acme.json
+  #   labels:
+  #     - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+
+  nginx:
+    <<: *service
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    env_file:
+      - .env
+    volumes:
+      - ./config/nginx/default.conf.template:/etc/nginx/templates/default.conf.template
+      - ./config/nginx/couch-tomatoes.me.crt:/etc/ssl/certs/couch-tomatoes.me
+    depends_on:
+      - plex
+      - qbittorrent
+      - radarr
+      - sonarr
+      - prowlarr
+      - overseerr
+      - jellyfin
+      - emby
+
+networks:
+  media_network:
+    driver: bridge

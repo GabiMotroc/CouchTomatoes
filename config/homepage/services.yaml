@@ -1,0 +1,51 @@
+
+# Services Section
+- Media:
+    - Plex:
+        icon: plex
+        href: http://plex.couch-tomatoes.me
+        description: "Media streaming"
+    - Jellyfin:
+        icon: jellyfin
+        href: http://jellyfin.couch-tomatoes.me
+        description: "Open-source alternative"
+    - Emby:
+        icon: emby
+        href: http://emby.couch-tomatoes.me
+        description: "Home media"
+
+- Media Management:
+    - Radarr:
+        icon: radarr
+        href: http://radarr.couch-tomatoes.me
+        description: "Movie automation"
+    - Sonarr:
+        icon: sonarr
+        href: http://sonarr.couch-tomatoes.me 
+        description: "TV automation"
+    - Prowlarr:
+        icon: prowlarr
+        href: http://prowlarr.couch-tomatoes.me
+        description: "Torrent indexer"
+    - qBittorrent:
+        icon: qbittorrent
+        href: http://qbittorrent.couch-tomatoes.me
+        description: "Torrent client"
+    - Overseerr:
+        icon: overseerr
+        href: http://overseerr.couch-tomatoes.me
+        description: "Media requests"
+
+- Monitoring:
+    - Grafana:
+        icon: grafana
+        href: http://grafana.couch-tomatoes.me
+        description: "Data visualization"
+    - Prometheus:
+        icon: prometheus
+        href: http://prometheus.couch-tomatoes.me
+        description: "Metrics collection"
+    - OpenTelemetry Collector:
+        icon: "mdi:chart-timeline-variant"
+        href: http://otel-collector.couch-tomatoes.me
+        description: "Tracing logs"

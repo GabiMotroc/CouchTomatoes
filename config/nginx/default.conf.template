@@ -1,0 +1,129 @@
+server {
+    listen 80;
+    server_name ${PLEX_NAME}.${DOMAIN};
+
+    location / {
+        proxy_pass http://${PLEX_NAME}:${PLEX_PORT}/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+server {
+    listen 80;
+    server_name ${QBITTORRENT_NAME}.${DOMAIN};
+
+    location / {
+        proxy_pass http://${QBITTORRENT_NAME}:${QBITTORRENT_PORT}/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+server {
+    listen 80;
+    server_name ${RADARR_NAME}.${DOMAIN};
+
+    location / {
+        proxy_pass http://${RADARR_NAME}:${RADARR_PORT}/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+server {
+    listen 80;
+    server_name ${SONARR_NAME}.${DOMAIN};
+
+    location / {
+        proxy_pass http://${SONARR_NAME}:${SONARR_PORT}/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+server {
+    listen 80;
+    server_name ${PROWLARR_NAME}.${DOMAIN};
+
+    location / {
+        proxy_pass http://${PROWLARR_NAME}:${PROWLARR_PORT}/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+
+server {
+    listen 80;
+    server_name ${OVERSEERR_NAME}.${DOMAIN};
+
+    location / {
+        proxy_pass http://${OVERSEERR_NAME}:${OVERSEERR_PORT}/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+server {
+    listen 80;
+    server_name ${JELLYFIN_NAME}.${DOMAIN};
+
+    location / {
+        proxy_pass http://${JELLYFIN_NAME}:${JELLYFIN_PORT}/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+server {
+    listen 80;
+    server_name ${EMBY_NAME}.${DOMAIN};
+
+    location / {
+        proxy_pass http://${EMBY_NAME}:${EMBY_PORT}/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+
+server {
+    listen 80;
+    server_name ${HOMEPAGE_NAME}.${DOMAIN};
+
+    location / {
+        proxy_pass http://${HOMEPAGE_NAME}:${HOMEPAGE_PORT}/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+server {
+    listen 443;
+    server_name test.${DOMAIN};
+    location / {
+        return 200 'gangnam style!';
+        add_header Content-Type text/plain;
+
+    }
+}
+
+server {
+    listen 443;
+    server_name ${DOMAIN};
+    location / {
+        return 200 'gangnam style!';
+        add_header Content-Type text/plain;
+
+    }
+}
