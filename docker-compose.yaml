@@ -196,52 +196,43 @@ services:
     container_name: ${HOMEPAGE_NAME}
     volumes:
       - ./config/homepage:/app/config
-    # labels:
-    #   - "traefik.enable=true"
-    #   - "traefik.http.routers.homepage.rule=Host(`couch-tomatoes.me`)"
-    #   - "traefik.http.routers.homepage.entrypoints=websecure"
-    #   - "traefik.http.routers.homepage.tls.certresolver=lets-encrypt"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homepage.rule=Host(`couch-tomatoes.me`)"
+      - "traefik.http.routers.homepage.entrypoints=websecure"
+      - "traefik.http.routers.homepage.tls.certresolver=lets-encrypt"
 
 
-  # traefix:
+  traefix:
+    <<: *service
+    image: traefik:v3.0
+    container_name: traefik
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - 80:80
+      - 443:443
+      - 8010:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./config/traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./config/acme/acme.json:/acme.json
+    labels:
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+  #
+  # nginx:
   #   <<: *service
-  #   image: traefik:v3.0
-  #   container_name: traefik
-  #   restart: always
-  #   security_opt:
-  #     - no-new-privileges:true
+  #   image: nginx:latest
+  #   container_name: nginx
   #   ports:
   #     - "80:80"
   #     - "443:443"
+  #   env_file:
+  #     - .env
   #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock:ro
-  #     - ./config/traefik/traefik.yml:/etc/traefik/traefik.yml:ro
-  #     - .config/acme.json:/acme.json
-  #   labels:
-  #     - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
-
-
-  nginx:
-    <<: *service
-    image: nginx:latest
-    container_name: nginx
-    ports:
-      - "80:80"
-      - "443:443"
-    env_file:
-      - .env
-    volumes:
-      - ./config/nginx/default.conf.template:/etc/nginx/templates/default.conf.template
-      - ./config/nginx/couch-tomatoes.me.crt:/etc/ssl/certs/couch-tomatoes.me
-    depends_on:
-      - plex
-      - qbittorrent
-      - radarr
-      - sonarr
-      - prowlarr
-      - overseerr
-      - jellyfin
-      - emby
+  #     - ./config/nginx/default.conf.template:/etc/nginx/templates/default.conf.template
+  #     - ./config/nginx/couch-tomatoes.me.crt:/etc/ssl/certs/couch-tomatoes.me
 
 networks:
   media_network:
