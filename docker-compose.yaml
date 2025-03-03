@@ -73,7 +73,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.${QBITTORRENT_NAME}.rule=PathPrefix(`/${QBITTORRENT_NAME}`)"
       - "traefik.http.routers.${QBITTORRENT_NAME}.entrypoints=websecure"
-      - "traefik.http.routers.${QBITTORRENT_NAME}.tls.certresolver=myresolver"
+      - "traefik.http.routers.${QBITTORRENT_NAME}.tls.certresolver=lets-encrypt"
       - "traefik.http.services.${QBITTORRENT_NAME}.loadbalancer.server.port=${QBITTORRENT_PORT}"
 
   radarr:
