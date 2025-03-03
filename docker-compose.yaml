@@ -10,6 +10,15 @@ x-user: &user
     - PGID=${GROUP_ID}
     - TZ=${TIMEZONE}
 
+x-routed-service: &routed-service
+  <<: *user
+  labels:
+    - "traefik.enable=true"
+    - "traefik.http.routers.${SERVICE_NAME}.rule=PathPrefix(`/${SERVICE_NAME}`)"
+    - "traefik.http.routers.${SERVICE_NAME}.entrypoints=websecure"
+    - "traefik.http.routers.${SERVICE_NAME}.tls.certresolver=myresolver"
+    - "traefik.http.services.${SERVICE_NAME}.loadbalancer.server.port=${SERVICE_PORT}"
+
 services:
   otel-collector:
     <<: *service
@@ -54,10 +63,18 @@ services:
       - 6881:6881  # Torrent port
       - 6881:6881/udp
     environment:
+      - SERVICE_NAME=${QBITTORRENT_NAME}
+      - SERVICE_PORT=${QBITTORRENT_PORT}
       - WEBUI_PORT=${QBITTORRENT_PORT}
     volumes:
       - ./config/qbittorrent:/config
       - ${DOWNLOADS_DIR}:/downloads
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.${QBITTORRENT_NAME}.rule=PathPrefix(`/${QBITTORRENT_NAME}`)"
+      - "traefik.http.routers.${QBITTORRENT_NAME}.entrypoints=websecure"
+      - "traefik.http.routers.${QBITTORRENT_NAME}.tls.certresolver=myresolver"
+      - "traefik.http.services.${QBITTORRENT_NAME}.loadbalancer.server.port=${QBITTORRENT_PORT}"
 
   radarr:
     <<: *user
