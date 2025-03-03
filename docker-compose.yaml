@@ -231,6 +231,19 @@ services:
       - ./config/traefik/traefik.yml:/etc/traefik/traefik.yml:ro
       - ./config/acme/acme.json:/acme.json
 
+  hello-world:
+    <<: *service
+    image: boxboat/hello-world-webapp
+    ports:
+      - 6000:6000
+    environment:
+      - PORT=6000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.hello-world.rule=PathPrefix(`/hello`)"
+      - "traefik.http.routers.hello-world.entrypoints=websecure"
+      - "traefik.http.routers.hello-world.tls.certresolver=lets-encrypt"
+      - "traefik.http.services.healthcheck.loadbalancer.server.port=6000"
   #
   # nginx:
   #   <<: *service
