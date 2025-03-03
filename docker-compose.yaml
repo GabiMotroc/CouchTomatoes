@@ -233,9 +233,9 @@ services:
 
   hello-world:
     <<: *service
-    image: boxboat/hello-world-webapp
+    image: crccheck/hello-world
     ports:
-      - 6000:6000
+      - 6000:8000
     environment:
       - PORT=6000
     labels:
