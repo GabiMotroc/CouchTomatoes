@@ -247,7 +247,7 @@ services:
   portainer:
     <<: *service
     image: portainer/portainer-ce:latest
-    container_name= ${PORTAINER_NAME}
+    container_name: ${PORTAINER_NAME}
     ports:
       - ${PORTAINER_PORT}:${PORTAINER_PORT}
     volumes:
