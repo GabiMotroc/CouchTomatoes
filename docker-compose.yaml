@@ -249,7 +249,7 @@ services:
     image: portainer/portainer-ce:latest
     container_name: ${PORTAINER_NAME}
     ports:
-      - ${PORTAINER_PORT}:${PORTAINER_PORT}
+      - ${PORTAINER_PORT}:9000
     volumes:
       - ./config/portainer:/data
       - /var/run/docker.sock:/var/run/docker.sock
