@@ -183,6 +183,7 @@ services:
       - ${SHOWS_4K_DIR}:/tv_4k
     ports:
       - 32469:32469/udp
+      - ${PLEX_PORT}:${PLEX_PORT}
     # labels:
     #   - "traefik.enable=true"
     #   - "traefik.http.routers.plex.rule=Host(`plex.couch-tomatoes.me`)"
