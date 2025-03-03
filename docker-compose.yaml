@@ -89,7 +89,6 @@ services:
     ports:
       - ${RADARR_4K_PORT}:${RADARR_4K_INT_PORT}
 
-
   sonarr:
     <<: *user
     image: lscr.io/linuxserver/sonarr:latest
@@ -120,7 +119,6 @@ services:
     ports:
       - ${SONARR_4K_PORT}:${SONARR_4K_INT_PORT}
 
-
   prowlarr:
     <<: *user
     image: lscr.io/linuxserver/prowlarr:latest
@@ -142,6 +140,8 @@ services:
       - LOG_LEVEL=debug
       - PORT=${OVERSEERR_PORT}
       - AUTH_METHOD=plex
+    ports:
+      - ${OVERSEERR_PORT}:${OVERSEERR_PORT}
     volumes:
       - ./config/overseerr:/app/config
 
@@ -243,6 +243,17 @@ services:
   #   volumes:
   #     - ./config/nginx/default.conf.template:/etc/nginx/templates/default.conf.template
   #     - ./config/nginx/couch-tomatoes.me.crt:/etc/ssl/certs/couch-tomatoes.me
+
+  portainer:
+    <<: *service
+    image: portainer/portainer-ce:latest
+    container_name= ${PORTAINER_NAME}
+    ports:
+      - ${PORTAINER_PORT}:${PORTAINER_PORT}
+    volumes:
+      - ./config/portainer:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+
 
 networks:
   media_network:
