@@ -60,7 +60,7 @@ services:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: ${PROWLARR_NAME}
     volumes:
-      - ./config/prowlarr:/config
+      - ./prowlarr:/config
     healthcheck:
       test: [ "CMD", "curl", "--fail", "${PROWLARR_NAME}.${DOMAIN}:${PROWLARR_PORT}/ping" ]
       interval: 30s

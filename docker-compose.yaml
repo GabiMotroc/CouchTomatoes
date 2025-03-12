@@ -1,3 +1,13 @@
+
 include:
   - path:
-    - apps/docker-compose.yaml
+    - ./config/docker-compose.yaml
+    - ./apps/monitoring/docker-compose.yaml
+    - ./apps/media/docker-compose.yaml
+    - ./apps/automation/docker-compose.yaml
+    - ./apps/management/docker-compose.yaml
+    - ./apps/networking/docker-compose.yaml
+
+networks:
+  media_network:
+    driver: bridge
