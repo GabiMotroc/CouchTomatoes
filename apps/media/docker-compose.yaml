@@ -1,0 +1,59 @@
+x-service: &service
+  restart: unless-stopped
+  networks:
+    - media_network
+
+x-user: &user
+  <<: *service
+  environment:
+    - PUID=${USER_ID}
+    - PGID=${GROUP_ID}
+    - TZ=${TIMEZONE}
+
+services:
+  jellyfin:
+    <<: *user
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: ${JELLYFIN_NAME}
+    volumes:
+      - ./jellyfin:/config
+      - ${SHOWS_DIR}:/data/tvshows
+      - ${MOVIES_DIR}:/data/movies
+
+  emby:
+    <<: *user
+    image: lscr.io/linuxserver/emby:latest
+    container_name: ${EMBY_NAME}
+    volumes:
+      - ./emby:/config
+      - ${SHOWS_DIR}:/data/tvshows
+      - ${MOVIES_DIR}:/data/movies
+    ports:
+      - ${EMBY_PORT}:${EMBY_PORT}
+
+  plex:
+    <<: *user
+    image: lscr.io/linuxserver/plex:latest
+    container_name: ${PLEX_NAME}
+    environment:
+      - VERSION=docker
+    volumes:
+      - ./plex:/config
+      - ${MOVIES_DIR}:/movies
+      - ${SHOWS_DIR}:/tv
+    ports:
+      - 32469:32469/udp
+      - ${PLEX_PORT}:${PLEX_PORT}
+
+  overseerr:
+    <<: *user
+    image: sctx/overseerr:latest
+    container_name: ${OVERSEERR_NAME}
+    environment:
+      - LOG_LEVEL=debug
+      - PORT=${OVERSEERR_PORT}
+      - AUTH_METHOD=plex
+    ports:
+      - ${OVERSEERR_PORT}:${OVERSEERR_PORT}
+    volumes:
+      - ./overseerr:/app/config

@@ -1,0 +1,40 @@
+x-service: &service
+  restart: unless-stopped
+  networks:
+    - media_network
+
+x-user: &user
+  <<: *service
+  environment:
+    - PUID=${USER_ID}
+    - PGID=${GROUP_ID}
+    - TZ=${TIMEZONE}
+
+services:
+  traefix:
+    <<: *service
+    image: traefik:v3.0
+    container_name: traefik
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - 80:80
+      - 443:443
+      - 8010:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./acme/acme.json:/acme.json
+
+  # nginx:
+  #   <<: *service
+  #   image: nginx:latest
+  #   container_name: nginx
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - ./config/nginx/default.conf.template:/etc/nginx/templates/default.conf.template
+  #     - ./config/nginx/couch-tomatoes.me.crt:/etc/ssl/certs/couch-tomatoes.me

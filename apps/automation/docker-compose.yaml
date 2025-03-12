@@ -1,0 +1,69 @@
+x-service: &service
+  restart: unless-stopped
+  networks:
+    - media_network
+
+x-user: &user
+  <<: *service
+  environment:
+    - PUID=${USER_ID}
+    - PGID=${GROUP_ID}
+    - TZ=${TIMEZONE}
+
+services:
+  qbittorrent:
+    <<: *user
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: ${QBITTORRENT_NAME}
+    ports:
+      - ${QBITTORRENT_PORT}:${QBITTORRENT_PORT}
+      - 6881:6881
+      - 6881:6881/udp
+    environment:
+      - WEBUI_PORT=${QBITTORRENT_PORT}
+    volumes:
+      - ./qbittorrent:/config
+      - ${DOWNLOADS_DIR}:/downloads
+
+  radarr:
+    <<: *user
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: ${RADARR_NAME}
+    volumes:
+      - ./radarr:/config
+      - ${MOVIES_DIR}:/movies
+      - ${DOWNLOADS_DIR}:/downloads
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "${RADARR_NAME}.${DOMAIN}:${RADARR_PORT}/ping" ]
+      interval: 30s
+      retries: 10
+    ports:
+      - ${RADARR_PORT}:${RADARR_PORT}
+
+  sonarr:
+    <<: *user
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: ${SONARR_NAME}
+    volumes:
+      - ./sonarr:/config
+      - ${SHOWS_DIR}:/tv
+      - ${DOWNLOADS_DIR}:/downloads
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "${SONARR_NAME}.${DOMAIN}:${SONARR_PORT}/ping" ]
+      interval: 30s
+      retries: 10
+    ports:
+      - ${SONARR_PORT}:${SONARR_PORT}
+
+  prowlarr:
+    <<: *user
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: ${PROWLARR_NAME}
+    volumes:
+      - ./config/prowlarr:/config
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "${PROWLARR_NAME}.${DOMAIN}:${PROWLARR_PORT}/ping" ]
+      interval: 30s
+      retries: 10
+    ports:
+      - ${PROWLARR_PORT}:${PROWLARR_PORT}

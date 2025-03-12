@@ -13,3 +13,11 @@ x-user: &user
 include:
   - path:
     - monitoring/docker-compose.yaml
+    - media/docker-compose.yaml
+    - automation/docker-compose.yaml
+    - management/docker-compose.yaml
+    - networking/docker-compose.yaml
+
+networks:
+  media_network:
+    driver: bridge

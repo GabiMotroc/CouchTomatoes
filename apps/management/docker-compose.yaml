@@ -1,0 +1,51 @@
+x-service: &service
+  restart: unless-stopped
+  networks:
+    - media_network
+
+x-user: &user
+  <<: *service
+  environment:
+    - PUID=${USER_ID}
+    - PGID=${GROUP_ID}
+    - TZ=${TIMEZONE}
+
+services:
+  homarr:
+    <<: *user
+    image: ghcr.io/homarr-labs/homarr:latest
+    container_name: ${HOMARR_NAME}
+    volumes:
+      - ./homarr/appdata:/appdata
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - SECRET_ENCRYPTION_KEY=48184b13aa18eac953c25ce3dcce00dfc9e86d0ff743520c974826d8ef43bb03
+    ports:
+      - ${HOMARR_PORT}:${HOMARR_PORT}
+
+  homepage:
+    <<: *user
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: ${HOMEPAGE_NAME}
+    volumes:
+      - ./homepage:/app/config
+
+  filebrowser:
+    <<: *user
+    container_name: filebrowser
+    image: hurlenko/filebrowser
+    ports:
+      - 9000:8080
+    volumes:
+      - ./filebrowser:/config
+      - /media/external_hdd:/data
+
+  portainer:
+    <<: *service
+    image: portainer/portainer-ce:latest
+    container_name: ${PORTAINER_NAME}
+    ports:
+      - ${PORTAINER_PORT}:9000
+    volumes:
+      - ./portainer:/data
+      - /var/run/docker.sock:/var/run/docker.sock
