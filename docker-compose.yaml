@@ -2,6 +2,8 @@ x-service: &service
   restart: unless-stopped
   networks:
     - media_network
+  depends_on:
+    - nginx
 
 x-user: &user
   <<: *service
@@ -189,6 +191,17 @@ services:
     #   - "traefik.http.routers.plex.entrypoints=websecure"
     #   - "traefik.http.routers.plex.tls.certresolver=lets-encrypt"
 
+  homarr:
+    <<: *user
+    image: ghcr.io/homarr-labs/homarr:latest
+    container_name: ${HOMARR_NAME}
+    volumes:
+      - ./config/homarr/appdata:/appdata
+      - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
+    environment:
+      - SECRET_ENCRYPTION_KEY=48184b13aa18eac953c25ce3dcce00dfc9e86d0ff743520c974826d8ef43bb03
+    ports:
+      - ${HOMARR_PORT}:${HOMARR_PORT}
 
   homepage:
     <<: *user
@@ -222,7 +235,6 @@ services:
 
 
   nginx:
-    <<: *service
     image: nginx:latest
     container_name: nginx
     ports:
@@ -233,15 +245,9 @@ services:
     volumes:
       - ./config/nginx/default.conf.template:/etc/nginx/templates/default.conf.template
       - ./config/nginx/couch-tomatoes.me.crt:/etc/ssl/certs/couch-tomatoes.me
-    depends_on:
-      - plex
-      - qbittorrent
-      - radarr
-      - sonarr
-      - prowlarr
-      - overseerr
-      - jellyfin
-      - emby
+    restart: unless-stopped
+    networks:
+      - media_network
 
 networks:
   media_network:

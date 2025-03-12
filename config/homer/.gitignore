@@ -1,0 +1,6 @@
+*
+!.gitignore
+!config*
+!manifest.json
+!additional-page.yml.dist
+!custom.css.sample

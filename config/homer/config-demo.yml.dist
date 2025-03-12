@@ -1,0 +1,144 @@
+---
+# Homepage configuration
+# See https://fontawesome.com/search for icons options
+
+title: "Demo dashboard"
+subtitle: "Homer"
+logo: "logo.png"
+# icon: "fas fa-skull-crossbones" # Optional icon
+
+header: true
+footer: '<p>Created with <span class="has-text-danger">❤️</span> with <a href="https://bulma.io/">Bulma</a>, <a href="https://vuejs.org/">Vue.js</a> & <a href="https://fontawesome.com/">font awesome</a> // Fork me on <a href="https://github.com/bastienwirtz/homer"><i class="fab fa-github-alt"></i></a></p>' # set false if you want to hide it.
+
+# Optional theme customization
+theme: default
+
+columns: "3"
+
+defaults:
+  layout: list
+
+# Optional message
+message:
+  style: "is-dark" # See https://bulma.io/documentation/components/message/#colors for styling options.
+  title: "👋 Welcome!"
+  content: "Homer is a dead simple static HOMepage for your servER (or anything else) to keep your services and favorite links on hand, based on a simple yaml configuration file.<br /> Learn more at <a href='https://github.com/bastienwirtz/homer'>github.com/bastienwirtz/homer</a>"
+
+# Optional navbar
+# links: [] # Allows for navbar (dark mode, layout, and search) without any links
+links:
+  - name: "Contribute!"
+    icon: "fab fa-github"
+    url: "https://github.com/bastienwirtz/homer"
+    target: "_blank" # optional html a tag target attribute
+  - name: "Documentation"
+    icon: "fas fa-book"
+    url: "https://github.com/bastienwirtz/homer/blob/main/README.md#table-of-contents"
+  # this will link to a second homer page that will load config from additional-page.yml and keep default config values as in config.yml file
+  # see url field and assets/additional-page.yml.dist used in this example:
+  - name: "another page!"
+    icon: "fas fa-file-alt"
+    url: "#additional-page" 
+
+# Services
+# First level array represent a group.
+# Leave only a "items" key if not using group (group name, icon & tagstyle are optional, section separation will not be displayed).
+services:
+  - name: "Try Homer"
+    icon: "fa-solid fa-arrow-right"
+    items:
+      - name: "Get started"
+        icon: "fa-solid fa-download"
+        subtitle: "Start using Homer in a few minutes"
+        tag: "setup"
+        url: "https://github.com/bastienwirtz/homer?tab=readme-ov-file#get-started"
+      - name: "Configuration"
+        icon: "fa-solid fa-sliders"
+        subtitle: "Configuration options documentation"
+        tag: "setup"
+        url: "https://github.com/bastienwirtz/homer/blob/main/docs/configuration.md"
+      - name: "Theming"
+        icon: "fa-solid fa-palette"
+        subtitle: "Customize Homer appearance"
+        tag: "theming"
+        url: "https://github.com/bastienwirtz/homer/blob/main/docs/theming.md"
+      - name: "Smart cards"
+        icon: "fa-solid fa-palette"
+        subtitle: "Displays dynamic information or actions."
+        tag: "setup"
+        url: "https://github.com/bastienwirtz/homer/blob/main/docs/customservices.md"
+      - name: "Dashboard icons"
+        icon: "fa-solid fa-icons"
+        tag: "setup"
+        url: ""
+        quick:
+          - name: "selfh.st"
+            url: "https://selfh.st/icons/"
+            icon: "fa-solid fa-arrow-up-right-from-square"
+            target: "_blank"
+          - name: "homarr-labs"
+            url: "https://github.com/homarr-labs/dashboard-icons"
+            icon: "fa-solid fa-arrow-up-right-from-square"
+            target: "_blank"
+      - name: "Buy me a coffee!"
+        subtitle: "Sponsor this project"
+        icon: "fa-solid fa-mug-hot"
+        url: "https://www.buymeacoffee.com/bastien"
+  - name: "Smart cards showcase"
+    icon: "fa-solid fa-brain"
+    class: "highlight-purple"
+    items: 
+      - name: "Octoprint"
+        logo: "https://cdn-icons-png.flaticon.com/512/3112/3112529.png"
+        apikey: "xxxxxxxxxxxx"
+        endpoint: "/dummy-data/octoprint"
+        type: "OctoPrint"
+      - name: "Pi-hole"
+        logo: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/pi-hole.png"
+        url: "https://pi-hole.net/"
+        endpoint: "/dummy-data/pihole"
+        type: "PiHole"
+      - name: "Proxmox - Node1"
+        logo: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/proxmox.png"
+        type: "Proxmox"
+        tag: "sys"
+        url: "https://www.proxmox.com/en/"
+        endpoint: "/dummy-data/proxmox"
+        node: "node1"
+        warning_value: 50
+        danger_value: 80
+        api_token: "xxxxxxxxxxxx"
+      - name: "PeaNUT"
+        logo: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/peanut.png"
+        url: "https://github.com/Brandawg93/PeaNUT"
+        endpoint: "/dummy-data/peanut"
+        type: "PeaNUT"
+        device: "ups"
+      - name: "Weather"
+        location: "Lille"
+        apikey: "xxxxxxxxxxxx" # insert your own API key here. Request one from https://openweathermap.org/api.
+        units: "metric"
+        endpoint: "/dummy-data/openweather/weather"
+        type: "OpenWeather"
+  - name: "Ressources"
+    icon: "fa-regular fa-bookmark"
+    class: highlight-inverted
+    items:
+      - name: "Selfhosted community"
+        icon: "fa-brands fa-reddit-alien"
+        tag: "community"
+        url: ""
+        quick:
+          - name: "r/selfhosted"
+            url: "https://www.reddit.com/r/selfhosted/"
+            icon: "fa-solid fa-arrow-up-right-from-square"
+            target: "_blank"
+          - name: "c/selfhosted"
+            url: "https://lemmy.world/c/selfhosted"
+            icon: "fa-solid fa-arrow-up-right-from-square"
+            target: "_blank"
+      - name: "Awesome selfhosted"
+        icon: "fa-solid fa-star"
+        subtitle: "Another application"
+        tag: "awesome-list"
+        url: "https://github.com/awesome-selfhosted/awesome-selfhosted"
