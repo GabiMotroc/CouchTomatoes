@@ -30,6 +30,7 @@ services:
     container_name: prometheus
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus:/prometheus
     ports:
       - 9090:9090
 
@@ -44,3 +45,7 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin  # Change this in production!
     volumes:
       - ./grafana:/var/lib/grafana
+
+
+volumes:
+  prometheus:

@@ -17,8 +17,8 @@ services:
     container_name: ${JELLYFIN_NAME}
     volumes:
       - ./jellyfin:/config
-      - ${SHOWS_DIR}:/data/tvshows
-      - ${MOVIES_DIR}:/data/movies
+      - shows:/data/tvshows
+      - movies:/data/movies
 
   emby:
     <<: *user
@@ -26,8 +26,8 @@ services:
     container_name: ${EMBY_NAME}
     volumes:
       - ./emby:/config
-      - ${SHOWS_DIR}:/data/tvshows
-      - ${MOVIES_DIR}:/data/movies
+      - shows:/data/tvshows
+      - movies:/data/movies
     ports:
       - ${EMBY_PORT}:${EMBY_PORT}
 
@@ -39,8 +39,8 @@ services:
       - VERSION=docker
     volumes:
       - ./plex:/config
-      - ${MOVIES_DIR}:/movies
-      - ${SHOWS_DIR}:/tv
+      - movies:/movies
+      - shows:/tv
     ports:
       - 32469:32469/udp
       - ${PLEX_PORT}:${PLEX_PORT}

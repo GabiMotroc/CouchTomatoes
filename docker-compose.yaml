@@ -10,3 +10,25 @@ include:
 networks:
   media_network:
     driver: bridge
+    
+volumes:
+  movies:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${MOVIES_DIR}
+      o: bind
+
+  shows:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${SHOWS_DIR}
+      o: bind
+
+  downloads:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${DOWNLOADS_DIR}
+      o: bind

@@ -23,7 +23,7 @@ services:
       - WEBUI_PORT=${QBITTORRENT_PORT}
     volumes:
       - ./qbittorrent:/config
-      - ${DOWNLOADS_DIR}:/downloads
+      - downloads:/downloads
 
   radarr:
     <<: *user
@@ -31,8 +31,8 @@ services:
     container_name: ${RADARR_NAME}
     volumes:
       - ./radarr:/config
-      - ${MOVIES_DIR}:/movies
-      - ${DOWNLOADS_DIR}:/downloads
+      - movies:/movies
+      - downloads:/downloads
     healthcheck:
       test: [ "CMD", "curl", "--fail", "${RADARR_NAME}.${DOMAIN}:${RADARR_PORT}/ping" ]
       interval: 30s
@@ -46,8 +46,8 @@ services:
     container_name: ${SONARR_NAME}
     volumes:
       - ./sonarr:/config
-      - ${SHOWS_DIR}:/tv
-      - ${DOWNLOADS_DIR}:/downloads
+      - shows:/tv
+      - downloads:/downloads
     healthcheck:
       test: [ "CMD", "curl", "--fail", "${SONARR_NAME}.${DOMAIN}:${SONARR_PORT}/ping" ]
       interval: 30s

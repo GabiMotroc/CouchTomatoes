@@ -38,7 +38,9 @@ services:
       - 9000:8080
     volumes:
       - ./filebrowser:/config
-      - /media/external_hdd:/data
+      - downloads:/downloads
+      - movies:/movies
+      - shows:/shows
 
   portainer:
     <<: *service
