@@ -2,8 +2,6 @@ x-service: &service
   restart: unless-stopped
   networks:
     - media_network
-  depends_on:
-    - nginx
 
 x-user: &user
   <<: *service
@@ -91,7 +89,6 @@ services:
     ports:
       - ${RADARR_4K_PORT}:${RADARR_4K_INT_PORT}
 
-
   sonarr:
     <<: *user
     image: lscr.io/linuxserver/sonarr:latest
@@ -122,7 +119,6 @@ services:
     ports:
       - ${SONARR_4K_PORT}:${SONARR_4K_INT_PORT}
 
-
   prowlarr:
     <<: *user
     image: lscr.io/linuxserver/prowlarr:latest
@@ -144,6 +140,8 @@ services:
       - LOG_LEVEL=debug
       - PORT=${OVERSEERR_PORT}
       - AUTH_METHOD=plex
+    ports:
+      - ${OVERSEERR_PORT}:${OVERSEERR_PORT}
     volumes:
       - ./config/overseerr:/app/config
 
@@ -185,11 +183,7 @@ services:
       - ${SHOWS_4K_DIR}:/tv_4k
     ports:
       - 32469:32469/udp
-    # labels:
-    #   - "traefik.enable=true"
-    #   - "traefik.http.routers.plex.rule=Host(`plex.couch-tomatoes.me`)"
-    #   - "traefik.http.routers.plex.entrypoints=websecure"
-    #   - "traefik.http.routers.plex.tls.certresolver=lets-encrypt"
+      - ${PLEX_PORT}:${PLEX_PORT}
 
   homarr:
     <<: *user
@@ -209,45 +203,55 @@ services:
     container_name: ${HOMEPAGE_NAME}
     volumes:
       - ./config/homepage:/app/config
-    # labels:
-    #   - "traefik.enable=true"
-    #   - "traefik.http.routers.homepage.rule=Host(`couch-tomatoes.me`)"
-    #   - "traefik.http.routers.homepage.entrypoints=websecure"
-    #   - "traefik.http.routers.homepage.tls.certresolver=lets-encrypt"
 
+  filebrowser:
+    <<: *user
+    container_name: filebrowser
+    image: hurlenko/filebrowser
+    ports:
+      - 9000:8080
+    volumes:
+      - ./config/filebrowser:/config
+      - /media/external_hdd:/data
 
-  # traefix:
+  traefix:
+    <<: *service
+    image: traefik:v3.0
+    container_name: traefik
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - 80:80
+      - 443:443
+      - 8010:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./config/traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./config/acme/acme.json:/acme.json
+
+  # nginx:
   #   <<: *service
-  #   image: traefik:v3.0
-  #   container_name: traefik
-  #   restart: always
-  #   security_opt:
-  #     - no-new-privileges:true
+  #   image: nginx:latest
+  #   container_name: nginx
   #   ports:
   #     - "80:80"
   #     - "443:443"
+  #   env_file:
+  #     - .env
   #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock:ro
-  #     - ./config/traefik/traefik.yml:/etc/traefik/traefik.yml:ro
-  #     - .config/acme.json:/acme.json
-  #   labels:
-  #     - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+  #     - ./config/nginx/default.conf.template:/etc/nginx/templates/default.conf.template
+  #     - ./config/nginx/couch-tomatoes.me.crt:/etc/ssl/certs/couch-tomatoes.me
 
-
-  nginx:
-    image: nginx:latest
-    container_name: nginx
+  portainer:
+    <<: *service
+    image: portainer/portainer-ce:latest
+    container_name: ${PORTAINER_NAME}
     ports:
-      - "80:80"
-      - "443:443"
-    env_file:
-      - .env
+      - ${PORTAINER_PORT}:9000
     volumes:
-      - ./config/nginx/default.conf.template:/etc/nginx/templates/default.conf.template
-      - ./config/nginx/couch-tomatoes.me.crt:/etc/ssl/certs/couch-tomatoes.me
-    restart: unless-stopped
-    networks:
-      - media_network
+      - ./config/portainer:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+
 
 networks:
   media_network:
