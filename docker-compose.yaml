@@ -1,4 +1,3 @@
-
 include:
   - path:
     - ./config/docker-compose.yaml
