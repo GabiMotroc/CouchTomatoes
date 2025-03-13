@@ -45,15 +45,14 @@ services:
       - 32469:32469/udp
       - ${PLEX_PORT}:${PLEX_PORT}
 
-  overseerr:
+  jellyseerr:
     <<: *user
-    image: sctx/overseerr:latest
-    container_name: ${OVERSEERR_NAME}
+    image: fallenbagel/jellyseerr:latest
+    container_name: ${JELLYSEERR_NAME}
     environment:
       - LOG_LEVEL=debug
-      - PORT=${OVERSEERR_PORT}
-      - AUTH_METHOD=plex
+      - JELLYFIN_TYPE=emby
     ports:
-      - ${OVERSEERR_PORT}:${OVERSEERR_PORT}
+      - ${JELLYSEERR_PORT}:${JELLYSEERR_PORT}
     volumes:
-      - ./overseerr:/app/config
+      - ./jellyseerr:/app/config
