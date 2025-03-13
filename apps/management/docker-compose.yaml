@@ -32,10 +32,10 @@ services:
 
   filebrowser:
     <<: *user
-    container_name: filebrowser
+    container_name: ${FILEBROWSER_NAME}
     image: hurlenko/filebrowser
     ports:
-      - 9000:8080
+      - ${FILEBROWSER_PORT}:${FILEBROWSER_INT_PORT}
     volumes:
       - ./filebrowser:/config
       - downloads:/data/downloads
@@ -47,7 +47,7 @@ services:
     image: portainer/portainer-ce:latest
     container_name: ${PORTAINER_NAME}
     ports:
-      - ${PORTAINER_PORT}:9000
+      - ${PORTAINER_PORT}:${PORTAINER_PORT}
     volumes:
       - ./portainer:/data
       - /var/run/docker.sock:/var/run/docker.sock
