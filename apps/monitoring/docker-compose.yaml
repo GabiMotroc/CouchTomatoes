@@ -46,6 +46,16 @@ services:
     volumes:
       - ./grafana:/var/lib/grafana
 
+  dash:
+    image: mauricenino/dashdot:latest
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - 3001:3001
+    volumes:
+      - /:/mnt/host:ro
+    environment:
+      - DASHDOT_ENABLE_CPU_TEMPS=true
 
 volumes:
   prometheus:
