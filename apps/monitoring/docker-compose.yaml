@@ -48,6 +48,7 @@ services:
 
   dash:
     image: mauricenino/dashdot:latest
+    container_name: dashdot
     restart: unless-stopped
     privileged: true
     ports:
