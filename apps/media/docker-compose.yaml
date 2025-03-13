@@ -11,15 +11,6 @@ x-user: &user
     - TZ=${TIMEZONE}
 
 services:
-  jellyfin:
-    <<: *user
-    image: lscr.io/linuxserver/jellyfin:latest
-    container_name: ${JELLYFIN_NAME}
-    volumes:
-      - ./jellyfin:/config
-      - shows:/data/tvshows
-      - movies:/data/movies
-
   emby:
     <<: *user
     image: lscr.io/linuxserver/emby:latest

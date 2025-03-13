@@ -23,13 +23,6 @@ services:
     ports:
       - ${HOMARR_PORT}:${HOMARR_PORT}
 
-  homepage:
-    <<: *user
-    image: ghcr.io/gethomepage/homepage:latest
-    container_name: ${HOMEPAGE_NAME}
-    volumes:
-      - ./homepage:/app/config
-
   filebrowser:
     <<: *user
     container_name: ${FILEBROWSER_NAME}
