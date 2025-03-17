@@ -47,9 +47,9 @@ services:
       - grafana:/var/lib/grafana
 
   dash:
+    <<: *service
     image: mauricenino/dashdot:latest
     container_name: ${DASHDOT_NAME}
-    restart: unless-stopped
     privileged: true
     ports:
       - ${DASHDOT_PORT}:${DASHDOT_PORT}
