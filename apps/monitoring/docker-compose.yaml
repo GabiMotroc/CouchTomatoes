@@ -37,9 +37,9 @@ services:
   grafana:
     <<: *service
     image: grafana/grafana:latest
-    container_name: grafana
+    container_name: ${GRAFANA_NAME}
     ports:
-      - 3000:3000
+      - ${GRAFANA_PORT}:${GRAFANA_PORT}
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin  # Change this in production!
@@ -48,11 +48,11 @@ services:
 
   dash:
     image: mauricenino/dashdot:latest
-    container_name: dashdot
+    container_name: ${DASHDOT_NAME}
     restart: unless-stopped
     privileged: true
     ports:
-      - 3001:3001
+      - ${DASHDOT_PORT}:${DASHDOT_PORT}
     volumes:
       - /:/mnt/host:ro
     environment:

@@ -1,9 +1,57 @@
 server {
     listen 80;
+    server_name ${DOMAIN};
+
+    location / {
+        proxy_pass http://${HOMARR_NAME}:${HOMARR_PORT}/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+server {
+    listen 80;
+    server_name ${HOMARR_NAME}.${DOMAIN};
+
+    location / {
+        proxy_pass http://${HOMARR_NAME}:${HOMARR_PORT}/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+server {
+    listen 80;
     server_name ${PLEX_NAME}.${DOMAIN};
 
     location / {
         proxy_pass http://${PLEX_NAME}:${PLEX_PORT}/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+server {
+    listen 80;
+    server_name ${EMBY_NAME}.${DOMAIN};
+
+    location / {
+        proxy_pass http://${EMBY_NAME}:${EMBY_PORT}/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+server {
+    listen 80;
+    server_name ${JELLYSEERR_NAME}.${DOMAIN};
+
+    location / {
+        proxy_pass http://${JELLYSEERR_NAME}:${JELLYSEERR_PORT}/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -61,23 +109,22 @@ server {
 
 server {
     listen 80;
-    server_name ${EMBY_NAME}.${DOMAIN};
+    server_name ${PORTAINER_NAME}.${DOMAIN};
 
     location / {
-        proxy_pass http://${EMBY_NAME}:${EMBY_PORT}/;
+        proxy_pass http://${PORTAINER_NAME}:${PORTAINER_PORT}/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
 }
 
-
 server {
     listen 80;
-    server_name ${HOMARR_NAME}.${DOMAIN};
+    server_name ${DASHDOT_NAME}.${DOMAIN};
 
     location / {
-        proxy_pass http://${HOMARR_NAME}:${HOMARR_PORT}/;
+        proxy_pass http://${DASHDOT_NAME}:${DASHDOT_PORT}/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
