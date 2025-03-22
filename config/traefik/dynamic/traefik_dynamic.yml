@@ -1,7 +1,15 @@
 http:
   routers:
+    domain:
+      rule: 'Host(`{{env "DOMAIN" }}`)'
+      entryPoints:
+        - "websecure"
+      service: homarr
+      tls:
+        certResolver: letsencrypt
+
     homarr:
-      rule: 'Host(`{{env "DOMAIN" }}`) || Host(`{{env "HOMARR_NAME"}}.{{env "DOMAIN"}}`)'
+      rule: 'Host(`{{env "HOMARR_NAME"}}.{{env "DOMAIN"}}`)'
       entryPoints:
         - "websecure"
       service: homarr
