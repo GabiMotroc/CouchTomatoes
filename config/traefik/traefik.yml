@@ -26,7 +26,6 @@ certificatesResolvers:
       storage: /acme.json
       # httpChallenge:
         # :wentryPoint: web  # This enables the HTTP challenge
-      dnschallenge: true
       dnschallenge:
         provider: cloudflare
         delayBeforeCheck: 10
