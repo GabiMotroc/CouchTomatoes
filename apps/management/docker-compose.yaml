@@ -20,15 +20,15 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - SECRET_ENCRYPTION_KEY=48184b13aa18eac953c25ce3dcce00dfc9e86d0ff743520c974826d8ef43bb03
-    ports:
-      - ${HOMARR_PORT}:${HOMARR_PORT}
+    # ports:
+    #   - ${HOMARR_PORT}:${HOMARR_PORT}
 
   filebrowser:
     <<: *user
     container_name: ${FILEBROWSER_NAME}
     image: hurlenko/filebrowser
-    ports:
-      - ${FILEBROWSER_PORT}:${FILEBROWSER_INT_PORT}
+    # ports:
+    #   - ${FILEBROWSER_PORT}:${FILEBROWSER_INT_PORT}
     volumes:
       - ./filebrowser:/config
       - downloads:/data/downloads
@@ -39,8 +39,8 @@ services:
     <<: *service
     image: portainer/portainer-ce:latest
     container_name: ${PORTAINER_NAME}
-    ports:
-      - ${PORTAINER_PORT}:${PORTAINER_PORT}
+    # ports:
+    #   - ${PORTAINER_PORT}:${PORTAINER_PORT}
     volumes:
       - ./portainer:/data
       - /var/run/docker.sock:/var/run/docker.sock

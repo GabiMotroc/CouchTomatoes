@@ -37,8 +37,8 @@ services:
       test: [ "CMD", "curl", "--fail", "${RADARR_NAME}.${DOMAIN}:${RADARR_PORT}/ping" ]
       interval: 30s
       retries: 10
-    ports:
-      - ${RADARR_PORT}:${RADARR_PORT}
+    # ports:
+    #   - ${RADARR_PORT}:${RADARR_PORT}
 
   sonarr:
     <<: *user
@@ -52,8 +52,8 @@ services:
       test: [ "CMD", "curl", "--fail", "${SONARR_NAME}.${DOMAIN}:${SONARR_PORT}/ping" ]
       interval: 30s
       retries: 10
-    ports:
-      - ${SONARR_PORT}:${SONARR_PORT}
+    # ports:
+    #   - ${SONARR_PORT}:${SONARR_PORT}
 
   prowlarr:
     <<: *user
@@ -65,5 +65,5 @@ services:
       test: [ "CMD", "curl", "--fail", "${PROWLARR_NAME}.${DOMAIN}:${PROWLARR_PORT}/ping" ]
       interval: 30s
       retries: 10
-    ports:
-      - ${PROWLARR_PORT}:${PROWLARR_PORT}
+    # ports:
+    #   - ${PROWLARR_PORT}:${PROWLARR_PORT}

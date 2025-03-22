@@ -51,8 +51,8 @@ services:
     image: mauricenino/dashdot:latest
     container_name: ${DASHDOT_NAME}
     privileged: true
-    ports:
-      - ${DASHDOT_PORT}:${DASHDOT_PORT}
+    # ports:
+    #   - ${DASHDOT_PORT}:${DASHDOT_PORT}
     volumes:
       - /:/mnt/host:ro
     environment:

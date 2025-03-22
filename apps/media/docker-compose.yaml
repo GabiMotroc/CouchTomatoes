@@ -19,8 +19,8 @@ services:
       - ./emby:/config
       - shows:/data/tvshows
       - movies:/data/movies
-    ports:
-      - ${EMBY_PORT}:${EMBY_PORT}
+    # ports:
+    #   - ${EMBY_PORT}:${EMBY_PORT}
 
   plex:
     <<: *user
@@ -32,9 +32,9 @@ services:
       - ./plex:/config
       - movies:/movies
       - shows:/tv
-    ports:
-      - 32469:32469/udp
-      - ${PLEX_PORT}:${PLEX_PORT}
+    # ports:
+    #   - 32469:32469/udp
+    #   - ${PLEX_PORT}:${PLEX_PORT}
 
   jellyseerr:
     <<: *user
@@ -43,7 +43,7 @@ services:
     environment:
       - LOG_LEVEL=debug
       - JELLYFIN_TYPE=emby
-    ports:
-      - ${JELLYSEERR_PORT}:${JELLYSEERR_PORT}
+    # ports:
+    #   - ${JELLYSEERR_PORT}:${JELLYSEERR_PORT}
     volumes:
       - ./jellyseerr:/app/config
