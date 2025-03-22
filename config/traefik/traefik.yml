@@ -29,3 +29,8 @@ certificatesResolvers:
       dnschallenge:
         provider: cloudflare
         delayBeforeCheck: 10
+
+
+accessLog: {}
+log:
+  level: DEBUG
