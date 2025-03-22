@@ -5,7 +5,8 @@ http:
       entryPoints:
         - "websecure"
       service: homarr
-      tls: {}
+      tls:
+        certResolver: letsencrypt
 
     plex:
       rule: 'Host(`{{env "PLEX_NAME"}}.{{env "DOMAIN"}}`)'
