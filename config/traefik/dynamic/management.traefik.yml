@@ -1,0 +1,60 @@
+http:
+  routers:
+    domain:
+      rule: 'Host(`{{env "DOMAIN" }}`)'
+      entryPoints:
+        - "websecure"
+      service: homarr
+      tls:
+        certResolver: letsencrypt
+
+    homarr:
+      rule: 'Host(`{{env "HOMARR_NAME"}}.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: homarr
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
+
+
+    filebrowser:
+      rule: 'Host(`{{env "FILEBROWSER_NAME"}}.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: filebrowser
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
+
+
+    portainer:
+      rule: 'Host(`{{env "PORTAINER_NAME"}}.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: portainer
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
+
+  services:
+    homarr:
+      loadBalancer:
+        servers:
+          - url: http://{{env "HOMARR_NAME"}}:{{env "HOMARR_PORT"}}/
+
+    filebrowser:
+      loadBalancer:
+        servers:
+          - url: http://{{env "FILEBROWSER_NAME"}}:{{env "FILEBROWSER_PORT"}}/
+
+    portainer:
+      loadBalancer:
+        servers:
+          - url: http://{{env "PORTAINER_NAME"}}:{{env "PORTAINER_PORT"}}/

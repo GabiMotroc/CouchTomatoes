@@ -1,0 +1,34 @@
+http:
+  routers:
+    grafana:
+      rule: 'Host(`{{env "GRAFANA_NAME"}}.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: grafana
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
+
+    dashdot:
+      rule: 'Host(`{{env "DASHDOT_NAME"}}.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: dashdot
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
+
+  services:
+    grafana:
+      loadBalancer:
+        servers:
+          - url: http://{{env "GRAFANA_NAME"}}:{{env "GRAFANA_PORT"}}/
+
+    dashdot:
+      loadBalancer:
+        servers:
+          - url: http://{{env "DASHDOT_NAME"}}:{{env "DASHDOT_PORT"}}/

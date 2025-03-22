@@ -1,0 +1,66 @@
+http:
+  routers:
+    qbittorrent:
+      rule: 'Host(`{{env "QBITTORRENT_NAME"}}.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: qbittorrent
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
+
+    radarr:
+      rule: 'Host(`{{env "RADARR_NAME"}}.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: radarr
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
+
+    sonarr:
+      rule: 'Host(`{{env "SONARR_NAME"}}.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: sonarr
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
+
+    prowlarr:
+      rule: 'Host(`{{env "PROWLARR_NAME"}}.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: prowlarr
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
+
+  services:
+    qbittorrent:
+      loadBalancer:
+        servers:
+          - url: http://{{env "QBITTORRENT_NAME"}}:{{env "QBITTORRENT_PORT"}}/
+
+    radarr:
+      loadBalancer:
+        servers:
+          - url: http://{{env "RADARR_NAME"}}:{{env "RADARR_PORT"}}/
+
+    sonarr:
+      loadBalancer:
+        servers:
+          - url: http://{{env "SONARR_NAME"}}:{{env "SONARR_PORT"}}/
+
+    prowlarr:
+      loadBalancer:
+        servers:
+          - url: http://{{env "PROWLARR_NAME"}}:{{env "PROWLARR_PORT"}}/

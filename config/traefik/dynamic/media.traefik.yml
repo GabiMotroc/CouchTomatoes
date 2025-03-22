@@ -1,0 +1,51 @@
+http:
+  routers:
+    emby:
+      rule: 'Host(`{{env "EMBY_NAME"}}.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: emby
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
+
+    plex:
+      rule: 'Host(`{{env "PLEX_NAME"}}.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: plex
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
+
+    jellyseerr:
+      rule: 'Host(`{{env "JELLYSEERR_NAME"}}.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: jellyseerr
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
+
+
+  services:
+    emby:
+      loadBalancer:
+        servers:
+          - url: http://{{env "EMBY_NAME"}}:{{env "EMBY_PORT"}}/
+
+    plex:
+      loadBalancer:
+        servers:
+          - url: http://{{env "PLEX_NAME"}}:{{env "PLEX_PORT"}}/
+
+    jellyseerr:
+      loadBalancer:
+        servers:
+          - url: http://{{env "JELLYSEERR_NAME"}}:{{env "JELLYSEERR_PORT"}}/
