@@ -15,6 +15,9 @@ http:
       service: homarr
       tls:
         certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
 
     plex:
       rule: 'Host(`{{env "PLEX_NAME"}}.{{env "DOMAIN"}}`)'
@@ -23,6 +26,9 @@ http:
       service: plex
       tls:
         certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
 
 
     emby:
@@ -32,6 +38,9 @@ http:
       service: emby
       tls:
         certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
 
     jellyseerr:
       rule: 'Host(`{{env "JELLYSEERR_NAME"}}.{{env "DOMAIN"}}`)'
@@ -40,7 +49,9 @@ http:
       service: jellyseerr
       tls:
         certResolver: letsencrypt
-
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
 
     qbittorrent:
       rule: 'Host(`{{env "QBITTORRENT_NAME"}}.{{env "DOMAIN"}}`)'
@@ -49,7 +60,9 @@ http:
       service: qbittorrent
       tls:
         certResolver: letsencrypt
-
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
 
     radarr:
       rule: 'Host(`{{env "RADARR_NAME"}}.{{env "DOMAIN"}}`)'
@@ -58,6 +71,9 @@ http:
       service: radarr
       tls:
         certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
 
     sonarr:
       rule: 'Host(`{{env "SONARR_NAME"}}.{{env "DOMAIN"}}`)'
@@ -66,6 +82,9 @@ http:
       service: sonarr
       tls:
         certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
 
     prowlarr:
       rule: 'Host(`{{env "PROWLARR_NAME"}}.{{env "DOMAIN"}}`)'
@@ -74,6 +93,9 @@ http:
       service: prowlarr
       tls:
         certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
 
     portainer:
       rule: 'Host(`{{env "PORTAINER_NAME"}}.{{env "DOMAIN"}}`)'
@@ -82,6 +104,9 @@ http:
       service: portainer
       tls:
         certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
 
     dashdot:
       rule: 'Host(`{{env "DASHDOT_NAME"}}.{{env "DOMAIN"}}`)'
@@ -90,6 +115,9 @@ http:
       service: dashdot
       tls:
         certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
 
   services:
     homarr:
