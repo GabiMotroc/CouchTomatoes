@@ -29,9 +29,6 @@ certificatesResolvers:
       dnschallenge:
         provider: cloudflare
         delayBeforeCheck: 10
-      domains:
-        - "couch-tomatoes.me"
-        - "*.couch-tomatoes.me"
 
 
 accessLog: {}
