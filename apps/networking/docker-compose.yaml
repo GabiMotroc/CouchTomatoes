@@ -20,7 +20,7 @@ services:
     env_file:
       - .env
     ports:
-      # - 80:80
+      - 80:80
       - 443:443
       - 8010:8080
     volumes:
@@ -31,15 +31,15 @@ services:
       - "--providers.file.directory=/etc/traefik/dynamic"
       - "--providers.file.watch=true"
 
-  nginx:
-    <<: *service
-    image: nginx:latest
-    container_name: nginx
-    ports:
-      - "80:80"
+  # nginx:
+  #   <<: *service
+  #   image: nginx:latest
+  #   container_name: nginx
+  #   ports:
+  #     - "80:80"
       # - "443:443"
-    env_file:
-      - .env
-    volumes:
-      - ./nginx/default.conf.template:/etc/nginx/templates/default.conf.template
-      - ./nginx/couch-tomatoes.me.crt:/etc/ssl/certs/couch-tomatoes.me
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - ./nginx/default.conf.template:/etc/nginx/templates/default.conf.template
+  #     - ./nginx/couch-tomatoes.me.crt:/etc/ssl/certs/couch-tomatoes.me
