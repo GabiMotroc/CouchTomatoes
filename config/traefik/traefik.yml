@@ -1,11 +1,11 @@
 entryPoints:
   web:
     address: :80
-    # http:
-    #   redirections:
-    #     entryPoint:
-    #       to: websecure
-    #       scheme: https
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
   websecure:
     address: :443
 
@@ -18,11 +18,11 @@ providers:
     directory: /etc/traefik/dynamic
     watch: true
 
-# certificatesResolvers:
-#   lets-encrypt:
-#     acme:
-#       caServer: https://acme-staging-v02.api.letsencrypt.org/directory
-#       email: motrocgabi@gmail.com
-#       storage: /acme.json
-#       httpChallenge:
-#         entryPoint: web  # This enables the HTTP challenge
+certificatesResolvers:
+  lets-encrypt:
+    acme:
+      caServer: https://acme-v02.api.letsencrypt.org/directory
+      email: motrocgabi@gmail.com
+      storage: /acme.json
+      httpChallenge:
+        entryPoint: web  # This enables the HTTP challenge
