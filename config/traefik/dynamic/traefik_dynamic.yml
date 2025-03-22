@@ -7,75 +7,68 @@ http:
       service: homarr
       tls: {}
 
-    # plex:
-    #   rule: "Host(`${PLEX_NAME}.${DOMAIN}`)"
-    #   entryPoints:
-    #     - "websecure"
-    #   service: plex
-    #   tls: {}
+    plex:
+      rule: 'Host(`{{env "PLEX_NAME"}}.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: plex
+      tls: {}
 
-    # emby:
-    #   rule: "Host(`${EMBY_NAME}.${DOMAIN}`)"
-    #   entryPoints:
-    #     - "websecure"
-    #   service: emby
-    #   tls: {}
+    emby:
+      rule: 'Host(`{{env "EMBY_NAME"}}.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: emby
+      tls: {}
 
-    # jellyseerr:
-    #   rule: "Host(`${JELLYSEERR_NAME}.${DOMAIN}`)"
-    #   entryPoints:
-    #     - "websecure"
-    #   service: jellyseerr
-    #   tls: {}
+    jellyseerr:
+      rule: 'Host(`{{env "JELLYSEERR_NAME"}}.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: jellyseerr
+      tls: {}
 
-    # qbittorrent:
-    #   rule: "Host(`${QBITTORRENT_NAME}.${DOMAIN}`)"
-    #   entryPoints:
-    #     - "websecure"
-    #   service: qbittorrent
-    #   tls: {}
+    qbittorrent:
+      rule: 'Host(`{{env "QBITTORRENT_NAME"}}.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: qbittorrent
+      tls: {}
 
-    # radarr:
-    #   rule: "Host(`${RADARR_NAME}.${DOMAIN}`)"
-    #   entryPoints:
-    #     - "websecure"
-    #   service: radarr
-    #   tls: {}
+    radarr:
+      rule: 'Host(`{{env "RADARR_NAME"}}.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: radarr
+      tls: {}
 
-    # sonarr:
-    #   rule: "Host(`${SONARR_NAME}.${DOMAIN}`)"
-    #   entryPoints:
-    #     - "websecure"
-    #   service: sonarr
-    #   tls: {}
+    sonarr:
+      rule: 'Host(`{{env "SONARR_NAME"}}.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: sonarr
+      tls: {}
 
-    # prowlarr:
-    #   rule: "Host(`${PROWLARR_NAME}.${DOMAIN}`)"
-    #   entryPoints:
-    #     - "websecure"
-    #   service: prowlarr
-    #   tls: {}
+    prowlarr:
+      rule: 'Host(`{{env "PROWLARR_NAME"}}.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: prowlarr
+      tls: {}
 
-    # portainer:
-    #   rule: "Host(`${PORTAINER_NAME}.${DOMAIN}`)"
-    #   entryPoints:
-    #     - "websecure"
-    #   service: portainer
-    #   tls: {}
+    portainer:
+      rule: 'Host(`{{env "PORTAINER_NAME"}}.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: portainer
+      tls: {}
 
-    # dashdot:
-    #   rule: "Host(`${DASHDOT_NAME}.${DOMAIN}`)"
-    #   entryPoints:
-    #     - "websecure"
-    #   service: dashdot
-    #   tls: {}
-
-    # gangnam:
-    #   rule: "Host(`test.${DOMAIN}`)"
-    #   entryPoints:
-    #     - "websecure"
-    #   service: gangnam-style
-    #   tls: {}
+    dashdot:
+      rule: 'Host(`{{env "DASHDOT_NAME"}}.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: dashdot
+      tls: {}
 
   services:
     homarr:
@@ -83,47 +76,47 @@ http:
         servers:
           - url: http://{{env "HOMARR_NAME"}}:{{env "HOMARR_PORT"}}/
 
-    # plex:
-    #   loadBalancer:
-    #     servers:
-    #       - url: "http://${PLEX_NAME}:${PLEX_PORT}/"
+    plex:
+      loadBalancer:
+        servers:
+          - url: http://{{env "PLEX_NAME"}}:{{env "PLEX_PORT"}}/
 
-    # emby:
-    #   loadBalancer:
-    #     servers:
-    #       - url: "http://${EMBY_NAME}:${EMBY_PORT}/"
+    emby:
+      loadBalancer:
+        servers:
+          - url: http://{{env "EMBY_NAME"}}:{{env "EMBY_PORT"}}/
 
-    # jellyseerr:
-    #   loadBalancer:
-    #     servers:
-    #       - url: "http://${JELLYSEERR_NAME}:${JELLYSEERR_PORT}/"
+    jellyseerr:
+      loadBalancer:
+        servers:
+          - url: http://{{env "JELLYSEERR_NAME"}}:{{env "JELLYSEERR_PORT"}}/
 
-    # qbittorrent:
-    #   loadBalancer:
-    #     servers:
-    #       - url: "http://${QBITTORRENT_NAME}:${QBITTORRENT_PORT}/"
+    qbittorrent:
+      loadBalancer:
+        servers:
+          - url: http://{{env "QBITTORRENT_NAME"}}:{{env "QBITTORRENT_PORT"}}/
 
-    # radarr:
-    #   loadBalancer:
-    #     servers:
-    #       - url: "http://${RADARR_NAME}:${RADARR_PORT}/"
+    radarr:
+      loadBalancer:
+        servers:
+          - url: http://{{env "RADARR_NAME"}}:{{env "RADARR_PORT"}}/
 
-    # sonarr:
-    #   loadBalancer:
-    #     servers:
-    #       - url: "http://${SONARR_NAME}:${SONARR_PORT}/"
+    sonarr:
+      loadBalancer:
+        servers:
+          - url: http://{{env "SONARR_NAME"}}:{{env "SONARR_PORT"}}/
 
-    # prowlarr:
-    #   loadBalancer:
-    #     servers:
-    #       - url: "http://${PROWLARR_NAME}:${PROWLARR_PORT}/"
+    prowlarr:
+      loadBalancer:
+        servers:
+          - url: http://{{env "PROWLARR_NAME"}}:{{env "PROWLARR_PORT"}}/
 
-    # portainer:
-    #   loadBalancer:
-    #     servers:
-    #       - url: "http://${PORTAINER_NAME}:${PORTAINER_PORT}/"
+    portainer:
+      loadBalancer:
+        servers:
+          - url: http://{{env "PORTAINER_NAME"}}:{{env "PORTAINER_PORT"}}/
 
-    # dashdot:
-    #   loadBalancer:
-    #     servers:
-    #       - url: "http://${DASHDOT_NAME}:${DASHDOT_PORT}/"
+    dashdot:
+      loadBalancer:
+        servers:
+          - url: http://{{env "DASHDOT_NAME"}}:{{env "DASHDOT_PORT"}}/
