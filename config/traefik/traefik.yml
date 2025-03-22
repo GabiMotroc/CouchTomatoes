@@ -19,13 +19,14 @@ providers:
     watch: true
 
 certificatesResolvers:
-  lets-encrypt:
+  letsencrypt:
     acme:
       caServer: https://acme-v02.api.letsencrypt.org/directory
       email: motrocgabi@gmail.com
       storage: /acme.json
-      httpChallenge:
-        entryPoint: web  # This enables the HTTP challenge
+      # httpChallenge:
+        # :wentryPoint: web  # This enables the HTTP challenge
+      dnschallenge: true
       dnschallenge:
         provider: cloudflare
         delayBeforeCheck: 10
