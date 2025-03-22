@@ -30,6 +30,7 @@ services:
     # ports:
     #   - ${FILEBROWSER_PORT}:${FILEBROWSER_INT_PORT}
     volumes:
+      - /:/data/root
       - ./filebrowser:/config
       - downloads:/data/downloads
       - movies:/data/movies
