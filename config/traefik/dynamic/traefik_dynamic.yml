@@ -1,7 +1,7 @@
 http:
   routers:
     homarr:
-      rule: "Host(`${DOMAIN}`) || Host(`${HOMARR_NAME}.${DOMAIN}`)"
+      rule: Host(`{{env "DOMAIN" }}`) || Host(`{{env "HOMARR_NAME"}}.{{env DOMAIN}}`)
       entryPoints:
         - "websecure"
       service: homarr
@@ -81,7 +81,7 @@ http:
     homarr:
       loadBalancer:
         servers:
-          - url: "http://${HOMARR_NAME}:${HOMARR_PORT}/"
+          - url: http://{{env "HOMARR_NAME"}}:{{env "HOMARR_PORT"}}/
 
     plex:
       loadBalancer:
