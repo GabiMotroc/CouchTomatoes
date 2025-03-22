@@ -30,18 +30,6 @@ http:
           - main: '{{env "DOMAIN"}}'
           - sans: '*.{{env "DOMAIN"}}'
 
-
-    emby:
-      rule: 'Host(`{{env "EMBY_NAME"}}.{{env "DOMAIN"}}`)'
-      entryPoints:
-        - "websecure"
-      service: emby
-      tls:
-        certResolver: letsencrypt
-        domains:
-          - main: '{{env "DOMAIN"}}'
-          - sans: '*.{{env "DOMAIN"}}'
-
     jellyseerr:
       rule: 'Host(`{{env "JELLYSEERR_NAME"}}.{{env "DOMAIN"}}`)'
       entryPoints:

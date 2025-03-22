@@ -1,0 +1,18 @@
+http:
+  routers:
+   emby:
+      rule: 'Host(`{{env "EMBY_NAME"}}.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: emby
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
+
+  services:
+    emby:
+      loadBalancer:
+        servers:
+          - url: http://{{env "EMBY_NAME"}}:{{env "EMBY_PORT"}}/
