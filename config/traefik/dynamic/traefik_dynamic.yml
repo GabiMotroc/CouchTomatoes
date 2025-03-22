@@ -13,63 +13,75 @@ http:
       entryPoints:
         - "websecure"
       service: plex
-      tls: {}
+      tls:
+        certResolver: letsencrypt
+
 
     emby:
       rule: 'Host(`{{env "EMBY_NAME"}}.{{env "DOMAIN"}}`)'
       entryPoints:
         - "websecure"
       service: emby
-      tls: {}
+      tls:
+        certResolver: letsencrypt
 
     jellyseerr:
       rule: 'Host(`{{env "JELLYSEERR_NAME"}}.{{env "DOMAIN"}}`)'
       entryPoints:
         - "websecure"
       service: jellyseerr
-      tls: {}
+      tls:
+        certResolver: letsencrypt
+
 
     qbittorrent:
       rule: 'Host(`{{env "QBITTORRENT_NAME"}}.{{env "DOMAIN"}}`)'
       entryPoints:
         - "websecure"
       service: qbittorrent
-      tls: {}
+      tls:
+        certResolver: letsencrypt
+
 
     radarr:
       rule: 'Host(`{{env "RADARR_NAME"}}.{{env "DOMAIN"}}`)'
       entryPoints:
         - "websecure"
       service: radarr
-      tls: {}
+      tls:
+        certResolver: letsencrypt
 
     sonarr:
       rule: 'Host(`{{env "SONARR_NAME"}}.{{env "DOMAIN"}}`)'
       entryPoints:
         - "websecure"
       service: sonarr
-      tls: {}
+      tls:
+        certResolver: letsencrypt
 
     prowlarr:
       rule: 'Host(`{{env "PROWLARR_NAME"}}.{{env "DOMAIN"}}`)'
       entryPoints:
         - "websecure"
       service: prowlarr
-      tls: {}
+      tls:
+        certResolver: letsencrypt
 
     portainer:
       rule: 'Host(`{{env "PORTAINER_NAME"}}.{{env "DOMAIN"}}`)'
       entryPoints:
         - "websecure"
       service: portainer
-      tls: {}
+      tls:
+        certResolver: letsencrypt
 
     dashdot:
       rule: 'Host(`{{env "DASHDOT_NAME"}}.{{env "DOMAIN"}}`)'
       entryPoints:
         - "websecure"
       service: dashdot
-      tls: {}
+      tls:
+        certResolver: letsencrypt
 
   services:
     homarr:
