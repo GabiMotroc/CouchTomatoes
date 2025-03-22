@@ -26,3 +26,6 @@ certificatesResolvers:
       storage: /acme.json
       httpChallenge:
         entryPoint: web  # This enables the HTTP challenge
+      dnschallenge:
+        provider: cloudflare
+        delayBeforeCheck: 10
