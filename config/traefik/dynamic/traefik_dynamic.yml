@@ -1,0 +1,129 @@
+http:
+  routers:
+    homarr:
+      rule: "Host(`${DOMAIN}`) || Host(`${HOMARR_NAME}.${DOMAIN}`)"
+      entryPoints:
+        - "websecure"
+      service: homarr
+      tls: {}
+
+    plex:
+      rule: "Host(`${PLEX_NAME}.${DOMAIN}`)"
+      entryPoints:
+        - "websecure"
+      service: plex
+      tls: {}
+
+    emby:
+      rule: "Host(`${EMBY_NAME}.${DOMAIN}`)"
+      entryPoints:
+        - "websecure"
+      service: emby
+      tls: {}
+
+    jellyseerr:
+      rule: "Host(`${JELLYSEERR_NAME}.${DOMAIN}`)"
+      entryPoints:
+        - "websecure"
+      service: jellyseerr
+      tls: {}
+
+    qbittorrent:
+      rule: "Host(`${QBITTORRENT_NAME}.${DOMAIN}`)"
+      entryPoints:
+        - "websecure"
+      service: qbittorrent
+      tls: {}
+
+    radarr:
+      rule: "Host(`${RADARR_NAME}.${DOMAIN}`)"
+      entryPoints:
+        - "websecure"
+      service: radarr
+      tls: {}
+
+    sonarr:
+      rule: "Host(`${SONARR_NAME}.${DOMAIN}`)"
+      entryPoints:
+        - "websecure"
+      service: sonarr
+      tls: {}
+
+    prowlarr:
+      rule: "Host(`${PROWLARR_NAME}.${DOMAIN}`)"
+      entryPoints:
+        - "websecure"
+      service: prowlarr
+      tls: {}
+
+    portainer:
+      rule: "Host(`${PORTAINER_NAME}.${DOMAIN}`)"
+      entryPoints:
+        - "websecure"
+      service: portainer
+      tls: {}
+
+    dashdot:
+      rule: "Host(`${DASHDOT_NAME}.${DOMAIN}`)"
+      entryPoints:
+        - "websecure"
+      service: dashdot
+      tls: {}
+
+    gangnam:
+      rule: "Host(`test.${DOMAIN}`)"
+      entryPoints:
+        - "websecure"
+      service: gangnam-style
+      tls: {}
+
+  services:
+    homarr:
+      loadBalancer:
+        servers:
+          - url: "http://${HOMARR_NAME}:${HOMARR_PORT}/"
+
+    plex:
+      loadBalancer:
+        servers:
+          - url: "http://${PLEX_NAME}:${PLEX_PORT}/"
+
+    emby:
+      loadBalancer:
+        servers:
+          - url: "http://${EMBY_NAME}:${EMBY_PORT}/"
+
+    jellyseerr:
+      loadBalancer:
+        servers:
+          - url: "http://${JELLYSEERR_NAME}:${JELLYSEERR_PORT}/"
+
+    qbittorrent:
+      loadBalancer:
+        servers:
+          - url: "http://${QBITTORRENT_NAME}:${QBITTORRENT_PORT}/"
+
+    radarr:
+      loadBalancer:
+        servers:
+          - url: "http://${RADARR_NAME}:${RADARR_PORT}/"
+
+    sonarr:
+      loadBalancer:
+        servers:
+          - url: "http://${SONARR_NAME}:${SONARR_PORT}/"
+
+    prowlarr:
+      loadBalancer:
+        servers:
+          - url: "http://${PROWLARR_NAME}:${PROWLARR_PORT}/"
+
+    portainer:
+      loadBalancer:
+        servers:
+          - url: "http://${PORTAINER_NAME}:${PORTAINER_PORT}/"
+
+    dashdot:
+      loadBalancer:
+        servers:
+          - url: "http://${DASHDOT_NAME}:${DASHDOT_PORT}/"

@@ -11,20 +11,25 @@ x-user: &user
     - TZ=${TIMEZONE}
 
 services:
-  # traefix:
-  #   <<: *service
-  #   image: traefik:v3.0
-  #   container_name: traefik
-  #   security_opt:
-  #     - no-new-privileges:true
-  #   ports:
-  #     - 80:80
-  #     - 443:443
-  #     - 8010:8080
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock:ro
-  #     - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
-  #     - ./acme/acme.json:/acme.json
+  traefix:
+    <<: *service
+    image: traefik:v3.0
+    container_name: traefik
+    security_opt:
+      - no-new-privileges:true
+    env_file:
+      - .env
+    ports:
+      # - 80:80
+      - 443:443
+      - 8010:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik:/etc/traefik
+      - ./acme/acme.json:/acme.json
+    command:
+      - "--providers.file.directory=/etc/traefik/dynamic"
+      - "--providers.file.watch=true"
 
   nginx:
     <<: *service
@@ -32,7 +37,7 @@ services:
     container_name: nginx
     ports:
       - "80:80"
-      - "443:443"
+      # - "443:443"
     env_file:
       - .env
     volumes:
