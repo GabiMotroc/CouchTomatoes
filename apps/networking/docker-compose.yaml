@@ -27,9 +27,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./traefik:/etc/traefik
       - ./acme/acme.json:/acme.json
-    command:
-      - "--providers.file.directory=/etc/traefik/dynamic"
-      - "--providers.file.watch=true"
 
   # nginx:
   #   <<: *service
