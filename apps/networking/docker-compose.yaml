@@ -11,7 +11,7 @@ x-user: &user
     - TZ=${TIMEZONE}
 
 services:
-  traefix:
+  traefik:
     <<: *service
     image: traefik:v3.0
     container_name: traefik
