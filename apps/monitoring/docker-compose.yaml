@@ -45,7 +45,8 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin  # Change this in production!
     volumes:
       - grafana:/var/lib/grafana
-      - ./grafana/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
       - ./grafana/dashboards:/etc/grafana/dashboards
 
   dash:

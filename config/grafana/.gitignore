@@ -1,6 +1,6 @@
 *
 !.gitignore
-!/datasources/
-!/datasources/**
+!/provisioning/
+!/provisioning/**
 !/dashboards/
 !/dashboards/**
