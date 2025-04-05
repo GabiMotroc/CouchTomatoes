@@ -8,6 +8,8 @@ entryPoints:
           scheme: https
   websecure:
     address: :443
+  metrics:
+    address: ":8082"
 
 api:
   insecure: true
@@ -30,6 +32,11 @@ certificatesResolvers:
         provider: cloudflare
         delayBeforeCheck: 10
 
+metrics:
+  prometheus:
+    addRoutersLabels: true
+    addServicesLabels: true
+    entryPoint: metrics
 
 accessLog: {}
 log:
