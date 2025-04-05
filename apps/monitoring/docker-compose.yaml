@@ -46,6 +46,7 @@ services:
     volumes:
       - grafana:/var/lib/grafana
       - ./grafana/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/dashboards:/etc/grafana/dashboards
 
   dash:
     <<: *service
