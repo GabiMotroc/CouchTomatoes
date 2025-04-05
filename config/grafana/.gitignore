@@ -2,3 +2,5 @@
 !.gitignore
 !/datasources/
 !/datasources/**
+!/dashboards/
+!/dashboards/**
