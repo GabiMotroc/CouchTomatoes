@@ -1,6 +1,6 @@
 http:
   routers:
-    qbittorrent:
+    klipper:
       rule: 'Host(`{{env "KLIPPER_NAME"}}.{{env "DOMAIN"}}`)'
       entryPoints:
         - "websecure"
