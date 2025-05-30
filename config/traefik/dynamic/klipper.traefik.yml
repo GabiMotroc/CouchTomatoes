@@ -1,0 +1,18 @@
+http:
+  routers:
+    qbittorrent:
+      rule: 'Host(`{{env "KLIPPER_NAME"}}.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: klipper
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
+          
+  services:
+    klipper:
+      loadBalancer:
+        servers:
+          - url: http://{{env "KLIPPER_IP"}}/
