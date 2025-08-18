@@ -67,3 +67,12 @@ services:
       retries: 10
     # ports:
     #   - ${PROWLARR_PORT}:${PROWLARR_PORT}
+
+  bazarr:
+    <<: *user
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    volumes:
+      - ./bazarr:/config
+      - shows:/tv
+      - movies:/movies

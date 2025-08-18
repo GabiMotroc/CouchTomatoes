@@ -44,6 +44,17 @@ http:
           - main: '{{env "DOMAIN"}}'
           - sans: '*.{{env "DOMAIN"}}'
 
+    bazarr:
+      rule: 'Host(`{{env "BAZARR_NAME"}}.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: bazarr
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
+
   services:
     qbittorrent:
       loadBalancer:
@@ -64,3 +75,8 @@ http:
       loadBalancer:
         servers:
           - url: http://{{env "PROWLARR_NAME"}}:{{env "PROWLARR_PORT"}}/
+
+    bazarr:
+      loadBalancer:
+        servers:
+          - url: http://{{env "BAZARR_NAME"}}:{{env "BAZARR_PORT"}}/
