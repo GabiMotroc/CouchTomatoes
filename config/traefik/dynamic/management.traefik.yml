@@ -43,6 +43,18 @@ http:
           - main: '{{env "DOMAIN"}}'
           - sans: '*.{{env "DOMAIN"}}'
 
+    n8n:
+      rule: 'Host(`{{env "N8N_NAME"}}.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: n8n
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
+
+
   services:
     homarr:
       loadBalancer:
@@ -58,3 +70,8 @@ http:
       loadBalancer:
         servers:
           - url: http://{{env "PORTAINER_NAME"}}:{{env "PORTAINER_PORT"}}/
+
+    n8n:
+      loadBalancer:
+        servers:
+          - url: http://{{env "N8N_NAME"}}:{{env "PORTAINER_PORT"}}/
