@@ -52,14 +52,12 @@ services:
     container_name: ${N8N_NAME}
     environment:
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
-      - N8N_HOST=${N8N_NAME}.${DOMAIN_NAME}
-      - N8N_PORT=5678
+      - N8N_HOST=${N8N_NAME}.${DOMAIN}
+      - N8N_PORT=${N8N_PORT}
       - N8N_PROTOCOL=https
       - N8N_RUNNERS_ENABLED=true
       - NODE_ENV=production
-      - WEBHOOK_URL=https://${N8N_NAME}.${DOMAIN_NAME}/
-      - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
-      - TZ=${GENERIC_TIMEZONE}
+      - WEBHOOK_URL=https://${N8N_NAME}.${DOMAIN}/
     volumes:
-      - n8n_data:/home/node/.n8n
+      - n8n:/home/node/.n8n
       - ./n8n:/files

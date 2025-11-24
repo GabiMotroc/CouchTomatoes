@@ -74,4 +74,4 @@ http:
     n8n:
       loadBalancer:
         servers:
-          - url: http://{{env "N8N_NAME"}}:{{env "PORTAINER_PORT"}}/
+          - url: http://{{env "N8N_NAME"}}:{{env "N8N_PORT"}}/
