@@ -17,18 +17,18 @@ volumes:
     driver_opts:
       type: nfs
       o: addr=${NFS_SERVER},nfsvers=4,rw,soft
-      device: ":/mnt/nas/movies"
+      device: ":/media/movies"
 
   shows:
     driver: local
     driver_opts:
       type: nfs
       o: addr=${NFS_SERVER},nfsvers=4,rw,soft
-      device: ":/mnt/nas/tv"
+      device: ":/media/tv"
 
   downloads:
     driver: local
     driver_opts:
       type: nfs
       o: addr=${NFS_SERVER},nfsvers=4,rw,soft
-      device: ":/mnt/nas/downloads"
+      device: ":/media/downloads"
