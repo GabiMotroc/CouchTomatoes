@@ -20,6 +20,9 @@ services:
       - 6881:6881
       - 6881:6881/udp
     environment:
+      - PUID=${USER_ID}
+      - PGID=${GROUP_ID}
+      - TZ=${TIMEZONE}
       - WEBUI_PORT=${QBITTORRENT_PORT}
     volumes:
       - ./qbittorrent:/config
