@@ -52,6 +52,28 @@ The project uses a modular `docker-compose` architecture, splitting services int
 - A registered domain (e.g., `couch-tomatoes.me`).
 - Cloudflare account (if using the default DNS-01 challenge for SSL).
 
+---
+
+### ⚠️ One-Time Node Setup (NFS)
+
+Media volumes (`movies`, `shows`, `downloads`) are mounted from an NFS share. Each new node added to the cluster **must** have the NFS client utilities installed before running `docker compose up`, otherwise Docker will fail to mount the volumes with a `no such file or directory` error.
+
+Run the following **once per node**:
+
+```bash
+sudo apt-get install -y nfs-common
+```
+
+Also ensure `NFS_SERVER` is set in `.env`:
+
+```bash
+NFS_SERVER=192.168.0.20
+```
+
+The NFS server exports the media library from `192.168.0.20:/mnt/main/media` (verified via `showmount -e 192.168.0.20`).
+
+---
+
 ### 2. Configuration
 Copy the `.env` file (or create one) and update the following key variables:
 
