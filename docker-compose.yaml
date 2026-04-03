@@ -24,7 +24,7 @@ volumes:
     driver_opts:
       type: nfs
       o: addr=${NFS_SERVER},nfsvers=4,rw,soft
-      device: ":/mnt/main/media/tv"
+      device: ":/mnt/main/media/shows"
 
   downloads:
     driver: local
