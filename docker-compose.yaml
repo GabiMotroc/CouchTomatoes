@@ -16,19 +16,19 @@ volumes:
     driver: local
     driver_opts:
       type: nfs
-      o: addr=192.168.1.200,nfsvers=4,rw,soft
+      o: addr=192.168.0.20,nfsvers=4,rw,soft
       device: ":/mnt/nas/movies"
 
   shows:
     driver: local
     driver_opts:
       type: nfs
-      o: addr=192.168.1.200,nfsvers=4,rw,soft
+      o: addr=192.168.0.20,nfsvers=4,rw,soft
       device: ":/mnt/nas/tv"
 
   downloads:
     driver: local
     driver_opts:
       type: nfs
-      o: addr=192.168.1.200,nfsvers=4,rw,soft
+      o: addr=192.168.0.20,nfsvers=4,rw,soft
       device: ":/mnt/nas/downloads"
