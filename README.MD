@@ -79,7 +79,17 @@ All media folders on the NFS share **must be owned by UID 1000 / GID 1000** — 
 **When creating a new folder on TrueNAS Scale:**
 
 1. Create the dataset/folder in TrueNAS as usual.
-2. SSH into TrueNAS (or use its Shell in the UI) and fix ownership:
+2. Fix ownership — choose one of the two methods below:
+
+   **Option A — TrueNAS Scale UI (no shell required):**
+   - Go to **Datasets** in the left sidebar.
+   - Find your dataset (e.g., `main/media/<new-folder>`).
+   - Click the three-dot menu → **Edit Permissions**.
+   - Under **Owner**, set **User** to `1000` and **Group** to `1000` (type the UID directly if the user doesn't exist by name).
+   - Check **Apply permissions recursively**.
+   - Click **Save Access Control List**.
+
+   **Option B — TrueNAS Shell / SSH:**
    ```bash
    chown -R 1000:1000 /mnt/main/media/<new-folder>
    chmod -R 775 /mnt/main/media/<new-folder>
@@ -92,10 +102,14 @@ All media folders on the NFS share **must be owned by UID 1000 / GID 1000** — 
 - Container logs show `UnauthorizedAccessException` or `Permission denied` on a path inside the volume.
 - Write test: `docker exec -u abc <container_name> touch /mountpoint/test && echo "OK"` — if this fails, it's a permissions issue on the NAS side.
 
-**Quick fix (run on TrueNAS Shell):**
-```bash
-chown -R 1000:1000 /mnt/main/media/<affected-folder>
-```
+**Quick fix — choose one method:**
+
+- **TrueNAS Scale UI**: Go to **Datasets** → find the affected dataset → three-dot menu → **Edit Permissions** → set Owner User/Group to `1000` → check **Apply permissions recursively** → **Save Access Control List**.
+- **TrueNAS Shell / SSH**:
+  ```bash
+  chown -R 1000:1000 /mnt/main/media/<affected-folder>
+  ```
+
 Then restart the affected container:
 ```bash
 docker restart <container_name>
