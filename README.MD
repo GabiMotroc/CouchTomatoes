@@ -72,6 +72,35 @@ NFS_SERVER=192.168.0.20
 
 The NFS server exports the media library from `192.168.0.20:/mnt/main/media` (verified via `showmount -e 192.168.0.20`).
 
+#### NFS Folder Permissions
+
+All media folders on the NFS share **must be owned by UID 1000 / GID 1000** — the user the containers run as (`PUID=1000`, `PGID=1000`). If ownership is wrong, containers will get `Permission denied` errors even though the NFS mount itself works.
+
+**When creating a new folder on TrueNAS Scale:**
+
+1. Create the dataset/folder in TrueNAS as usual.
+2. SSH into TrueNAS (or use its Shell in the UI) and fix ownership:
+   ```bash
+   chown -R 1000:1000 /mnt/main/media/<new-folder>
+   chmod -R 775 /mnt/main/media/<new-folder>
+   ```
+3. Add the new volume to `docker-compose.yaml` (root file) following the same NFS pattern as `movies`, `shows`, or `downloads`.
+4. Mount it in the relevant service's `volumes:` block.
+5. Run `docker compose up -d` — Docker will mount the new NFS volume automatically.
+
+**Symptoms of a permissions problem:**
+- Container logs show `UnauthorizedAccessException` or `Permission denied` on a path inside the volume.
+- Write test: `docker exec -u abc <container_name> touch /mountpoint/test && echo "OK"` — if this fails, it's a permissions issue on the NAS side.
+
+**Quick fix (run on TrueNAS Shell):**
+```bash
+chown -R 1000:1000 /mnt/main/media/<affected-folder>
+```
+Then restart the affected container:
+```bash
+docker restart <container_name>
+```
+
 ---
 
 ### 2. Configuration
