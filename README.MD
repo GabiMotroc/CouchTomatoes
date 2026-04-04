@@ -145,15 +145,15 @@ docker compose up -d
 
 ---
 
-### 📊 Monitoring & Grafana
+### 📊 Monitoring & Observability
 
-#### Grafana Provisioning Permissions
+#### Service Configuration Permissions (Grafana & OpenTelemetry)
 
-Grafana requires certain permissions to read its provisioning files (datasources and dashboards). If the container is stuck in a restart loop with `permission denied` errors in the logs, ensure the files in `config/grafana/` have the correct permissions.
+Monitoring services often require specific permissions to read their configuration and provisioning files. If a container is stuck in a restart loop with `permission denied` errors in the logs, it's likely because the container user cannot read the files mounted from the host.
 
-Since Grafana runs as UID 472 inside the container, but the files on the host are typically owned by UID 1000, you must allow read access to other users.
+Run the following on the host to allow read access to other users (since these services run as their own non-root users):
 
-Run the following on the host:
+**For Grafana (UID 472):**
 ```bash
 # Set configuration files to 644 (read for all)
 chmod -R 644 config/grafana/provisioning/datasources/*.yml
@@ -161,6 +161,12 @@ chmod -R 644 config/grafana/provisioning/dashboards/*.json
 
 # Set directories to 755 (execute for all)
 find config/grafana -type d -exec chmod 755 {} +
+```
+
+**For OpenTelemetry Collector:**
+```bash
+# Set the main config file to 644
+chmod 644 config/otel/otel-collector-config.yaml
 ```
 
 ---
