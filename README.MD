@@ -145,6 +145,32 @@ docker compose up -d
 
 ---
 
+### 📊 Monitoring & Observability
+
+#### Service Configuration Permissions (Grafana & OpenTelemetry)
+
+Monitoring services often require specific permissions to read their configuration and provisioning files. If a container is stuck in a restart loop with `permission denied` errors in the logs, it's likely because the container user cannot read the files mounted from the host.
+
+Run the following on the host to allow read access to other users (since these services run as their own non-root users):
+
+**For Grafana (UID 472):**
+```bash
+# Set configuration files to 644 (read for all)
+chmod -R 644 config/grafana/provisioning/datasources/*.yml
+chmod -R 644 config/grafana/provisioning/dashboards/*.json
+
+# Set directories to 755 (execute for all)
+find config/grafana -type d -exec chmod 755 {} +
+```
+
+**For OpenTelemetry Collector:**
+```bash
+# Set the main config file to 644
+chmod 644 config/otel/otel-collector-config.yaml
+```
+
+---
+
 ## 🌐 Networking & Access
 
 All services are accessible via subdomains on your configured `DOMAIN`. Traefik handles the routing and SSL termination automatically.
