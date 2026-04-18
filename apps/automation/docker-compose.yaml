@@ -76,3 +76,14 @@ services:
       - ./bazarr:/config
       - shows:/tv
       - movies:/movies
+
+  profilarr:
+    <<: *service
+    image: santiagosayshey/profilarr:latest
+    container_name: ${PROFILARR_NAME}
+    environment:
+      - TZ=${TIMEZONE}
+    volumes:
+      - ./profilarr:/config
+    # ports:
+    #   - ${PROFILARR_PORT}:${PROFILARR_PORT}
