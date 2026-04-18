@@ -52,6 +52,71 @@ The project uses a modular `docker-compose` architecture, splitting services int
 - A registered domain (e.g., `couch-tomatoes.me`).
 - Cloudflare account (if using the default DNS-01 challenge for SSL).
 
+---
+
+### ⚠️ One-Time Node Setup (NFS)
+
+Media volumes (`movies`, `shows`, `downloads`) are mounted from an NFS share. Each new node added to the cluster **must** have the NFS client utilities installed before running `docker compose up`, otherwise Docker will fail to mount the volumes with a `no such file or directory` error.
+
+Run the following **once per node**:
+
+```bash
+sudo apt-get install -y nfs-common
+```
+
+Also ensure `NFS_SERVER` is set in `.env`:
+
+```bash
+NFS_SERVER=192.168.0.20
+```
+
+The NFS server exports the media library from `192.168.0.20:/mnt/main/media` (verified via `showmount -e 192.168.0.20`).
+
+#### NFS Folder Permissions
+
+All media folders on the NFS share **must be owned by UID 1000 / GID 1000** — the user the containers run as (`PUID=1000`, `PGID=1000`). If ownership is wrong, containers will get `Permission denied` errors even though the NFS mount itself works.
+
+**When creating a new folder on TrueNAS Scale:**
+
+1. Create the dataset/folder in TrueNAS as usual.
+2. Fix ownership — choose one of the two methods below:
+
+   **Option A — TrueNAS Scale UI (no shell required):**
+   - Go to **Datasets** in the left sidebar.
+   - Find your dataset (e.g., `main/media/<new-folder>`).
+   - Click the three-dot menu → **Edit Permissions**.
+   - Under **Owner**, set **User** to `1000` and **Group** to `1000` (type the UID directly if the user doesn't exist by name).
+   - Check **Apply permissions recursively**.
+   - Click **Save Access Control List**.
+
+   **Option B — TrueNAS Shell / SSH:**
+   ```bash
+   chown -R 1000:1000 /mnt/main/media/<new-folder>
+   chmod -R 775 /mnt/main/media/<new-folder>
+   ```
+3. Add the new volume to `docker-compose.yaml` (root file) following the same NFS pattern as `movies`, `shows`, or `downloads`.
+4. Mount it in the relevant service's `volumes:` block.
+5. Run `docker compose up -d` — Docker will mount the new NFS volume automatically.
+
+**Symptoms of a permissions problem:**
+- Container logs show `UnauthorizedAccessException` or `Permission denied` on a path inside the volume.
+- Write test: `docker exec -u abc <container_name> touch /mountpoint/test && echo "OK"` — if this fails, it's a permissions issue on the NAS side.
+
+**Quick fix — choose one method:**
+
+- **TrueNAS Scale UI**: Go to **Datasets** → find the affected dataset → three-dot menu → **Edit Permissions** → set Owner User/Group to `1000` → check **Apply permissions recursively** → **Save Access Control List**.
+- **TrueNAS Shell / SSH**:
+  ```bash
+  chown -R 1000:1000 /mnt/main/media/<affected-folder>
+  ```
+
+Then restart the affected container:
+```bash
+docker restart <container_name>
+```
+
+---
+
 ### 2. Configuration
 Copy the `.env` file (or create one) and update the following key variables:
 

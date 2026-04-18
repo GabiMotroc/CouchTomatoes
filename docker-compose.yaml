@@ -15,20 +15,20 @@ volumes:
   movies:
     driver: local
     driver_opts:
-      type: none
-      device: ${MOVIES_DIR}
-      o: bind
+      type: nfs
+      o: addr=${NFS_SERVER},nfsvers=4,rw,soft
+      device: ":/mnt/main/media/movies"
 
   shows:
     driver: local
     driver_opts:
-      type: none
-      device: ${SHOWS_DIR}
-      o: bind
+      type: nfs
+      o: addr=${NFS_SERVER},nfsvers=4,rw,soft
+      device: ":/mnt/main/media/shows"
 
   downloads:
     driver: local
     driver_opts:
-      type: none
-      device: ${DOWNLOADS_DIR}
-      o: bind
+      type: nfs
+      o: addr=${NFS_SERVER},nfsvers=4,rw,soft
+      device: ":/mnt/main/media/downloads"
