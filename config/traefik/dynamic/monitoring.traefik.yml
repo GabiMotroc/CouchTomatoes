@@ -22,6 +22,17 @@ http:
           - main: '{{env "DOMAIN"}}'
           - sans: '*.{{env "DOMAIN"}}'
 
+    beszel:
+      rule: 'Host(`{{env "BESZEL_NAME"}}.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: beszel
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
+
   services:
     grafana:
       loadBalancer:
@@ -32,3 +43,8 @@ http:
       loadBalancer:
         servers:
           - url: http://{{env "DASHDOT_NAME"}}:{{env "DASHDOT_PORT"}}/
+
+    beszel:
+      loadBalancer:
+        servers:
+          - url: http://{{env "BESZEL_NAME"}}:{{env "BESZEL_PORT"}}/
