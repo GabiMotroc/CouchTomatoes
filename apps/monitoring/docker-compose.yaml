@@ -49,18 +49,6 @@ services:
       - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
       - ./grafana/dashboards:/etc/grafana/dashboards
 
-  dash:
-    <<: *service
-    image: mauricenino/dashdot:latest
-    container_name: ${DASHDOT_NAME}
-    privileged: true
-    # ports:
-    #   - ${DASHDOT_PORT}:${DASHDOT_PORT}
-    volumes:
-      - /:/mnt/host:ro
-    environment:
-      - DASHDOT_ENABLE_CPU_TEMPS=true
-
   beszel:
     <<: *service
     image: henrygd/beszel:latest
