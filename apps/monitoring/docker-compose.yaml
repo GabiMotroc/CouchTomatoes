@@ -61,6 +61,27 @@ services:
     environment:
       - DASHDOT_ENABLE_CPU_TEMPS=true
 
+  beszel:
+    <<: *service
+    image: henrygd/beszel:latest
+    container_name: ${BESZEL_NAME}
+    # ports:
+    #   - ${BESZEL_PORT}:${BESZEL_PORT}
+    volumes:
+      - ./beszel:/beszel_data
+
+  beszel-agent:
+    <<: *service
+    image: henrygd/beszel-agent:latest
+    container_name: ${BESZEL_NAME}-agent
+    network_mode: host
+    networks: []
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - PORT=45876
+      - KEY=${BESZEL_AGENT_KEY}
+
 volumes:
   prometheus:
   grafana:
