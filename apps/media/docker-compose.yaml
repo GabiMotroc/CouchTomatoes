@@ -22,6 +22,15 @@ services:
     # ports:
     #   - ${EMBY_PORT}:${EMBY_PORT}
 
+  jellyfin:
+    <<: *user
+    image: jellyfin/jellyfin    
+    container_name: ${JELLYFIN_NAME}
+    volumes:
+      - ./jellyfin:/config
+      - shows:/data/tvshows
+      - movies:/data/movies
+
   plex:
     <<: *user
     image: lscr.io/linuxserver/plex:latest

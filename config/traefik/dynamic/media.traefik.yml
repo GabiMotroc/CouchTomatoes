@@ -11,6 +11,17 @@ http:
           - main: '{{env "DOMAIN"}}'
           - sans: '*.{{env "DOMAIN"}}'
 
+    jellyfin:
+      rule: 'Host(`{{env "JELLYFIN_NAME"}}.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: jellyfin
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
+
     plex:
       rule: 'Host(`{{env "PLEX_NAME"}}.{{env "DOMAIN"}}`)'
       entryPoints:
@@ -39,6 +50,11 @@ http:
       loadBalancer:
         servers:
           - url: http://{{env "EMBY_NAME"}}:{{env "EMBY_PORT"}}/
+
+    jellyfin:
+      loadBalancer:
+        servers:
+          - url: http://{{env "JELLYFIN_NAME"}}:{{env "JELLYFIN_PORT"}}/
 
     plex:
       loadBalancer:
