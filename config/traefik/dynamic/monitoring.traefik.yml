@@ -22,17 +22,6 @@ http:
           - main: '{{env "DOMAIN"}}'
           - sans: '*.{{env "DOMAIN"}}'
 
-    beszel:
-      rule: 'Host(`{{env "BESZEL_NAME"}}.{{env "DOMAIN"}}`)'
-      entryPoints:
-        - "websecure"
-      service: beszel
-      tls:
-        certResolver: letsencrypt
-        domains:
-          - main: '{{env "DOMAIN"}}'
-          - sans: '*.{{env "DOMAIN"}}'
-
   services:
     grafana:
       loadBalancer:
