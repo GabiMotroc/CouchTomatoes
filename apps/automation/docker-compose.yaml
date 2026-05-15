@@ -37,7 +37,7 @@ services:
       - movies:/movies
       - downloads:/downloads
     healthcheck:
-      test: [ "CMD", "curl", "--fail", "${RADARR_NAME}.${DOMAIN}:${RADARR_PORT}/ping" ]
+      test: [ "CMD", "curl", "--fail", "https://${RADARR_NAME}.${DOMAIN}/ping" ]
       interval: 30s
       retries: 10
     # ports:
@@ -52,7 +52,7 @@ services:
       - shows:/tv
       - downloads:/downloads
     healthcheck:
-      test: [ "CMD", "curl", "--fail", "${SONARR_NAME}.${DOMAIN}:${SONARR_PORT}/ping" ]
+      test: [ "CMD", "curl", "--fail", "https://${SONARR_NAME}.${DOMAIN}/ping" ]
       interval: 30s
       retries: 10
     # ports:
@@ -65,7 +65,7 @@ services:
     volumes:
       - ./prowlarr:/config
     healthcheck:
-      test: [ "CMD", "curl", "--fail", "${PROWLARR_NAME}.${DOMAIN}:${PROWLARR_PORT}/ping" ]
+      test: [ "CMD", "curl", "--fail", "https://${PROWLARR_NAME}.${DOMAIN}/ping" ]
       interval: 30s
       retries: 10
     # ports:
@@ -79,6 +79,10 @@ services:
       - ./bazarr:/config
       - shows:/tv
       - movies:/movies
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "https://${BAZARR_NAME}.${DOMAIN}/health" ]
+      interval: 30s
+      retries: 10
 
   profilarr:
     <<: *service

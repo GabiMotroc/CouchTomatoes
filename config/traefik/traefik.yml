@@ -39,6 +39,7 @@ metrics:
     addServicesLabels: true
     entryPoint: metrics
 
+
 accessLog: {}
 log:
   level: INFO

@@ -33,6 +33,10 @@ services:
       - prometheus:/prometheus
     ports:
       - 9090:9090
+    healthcheck:
+      test: [ "CMD", "wget", "-q", "-O", "/dev/null", "http://localhost:9090/-/healthy" ]
+      interval: 30s
+      retries: 10
 
   grafana:
     <<: *service
@@ -40,12 +44,15 @@ services:
     container_name: ${GRAFANA_NAME}
     ports:
       - ${GRAFANA_PORT}:${GRAFANA_PORT}
-    environment:
     volumes:
       - grafana:/var/lib/grafana
       - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
       - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
       - ./grafana/dashboards:/etc/grafana/dashboards
+    healthcheck:
+      test: [ "CMD", "wget", "-q", "-O", "/dev/null", "https://${GRAFANA_NAME}.${DOMAIN}/api/health" ]
+      interval: 30s
+      retries: 10
 
   beszel:
     <<: *service
@@ -61,10 +68,14 @@ services:
 
   beszel-agent:
     <<: *service
-    image: henrygd/beszel-agent:latest
+    image: henrygd/beszel-agent-intel:latest
     container_name: ${BESZEL_NAME}-agent
     network_mode: host
     networks: []
+    cap_add:
+      - CAP_PERFMON
+    devices:
+      - /dev/dri:/dev/dri
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./beszel_agent_data:/var/lib/beszel-agent
