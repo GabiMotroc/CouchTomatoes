@@ -39,6 +39,8 @@ metrics:
     addServicesLabels: true
     entryPoint: metrics
 
+ping: {}
+
 accessLog: {}
 log:
   level: INFO

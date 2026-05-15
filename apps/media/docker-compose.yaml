@@ -21,6 +21,10 @@ services:
       - movies:/data/movies
     # ports:
     #   - ${EMBY_PORT}:${EMBY_PORT}
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "https://${EMBY_NAME}.${DOMAIN}/emby/system/ping" ]
+      interval: 30s
+      retries: 10
 
   jellyfin:
     <<: *user
@@ -34,6 +38,10 @@ services:
       - ./jellyfin:/config
       - shows:/data/tvshows
       - movies:/data/movies
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "https://${JELLYFIN_NAME}.${DOMAIN}/health" ]
+      interval: 30s
+      retries: 10
 
   seerr:
     <<: *service

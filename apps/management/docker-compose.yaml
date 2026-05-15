@@ -22,6 +22,10 @@ services:
       - SECRET_ENCRYPTION_KEY=${SECRET_ENCRYPTION_KEY}
     # ports:
     #   - ${HOMARR_PORT}:${HOMARR_PORT}
+    healthcheck:
+      test: [ "CMD", "wget", "-q", "-O", "/dev/null", "https://${HOMARR_NAME}.${DOMAIN}/api/health" ]
+      interval: 30s
+      retries: 10
 
   filebrowser:
     <<: *user
@@ -35,6 +39,10 @@ services:
       - downloads:/data/downloads
       - movies:/data/movies
       - shows:/data/shows
+    healthcheck:
+      test: [ "CMD", "wget", "-q", "-O", "/dev/null", "https://${FILEBROWSER_NAME}.${DOMAIN}/health" ]
+      interval: 30s
+      retries: 10
 
   portainer:
     <<: *service
@@ -61,3 +69,7 @@ services:
     volumes:
       - ./n8n:/home/node/.n8n
       - ./n8n_files:/files
+    healthcheck:
+      test: [ "CMD", "wget", "-q", "-O", "/dev/null", "https://${N8N_NAME}.${DOMAIN}/healthz" ]
+      interval: 30s
+      retries: 10

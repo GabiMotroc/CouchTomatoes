@@ -26,6 +26,10 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./traefik:/etc/traefik
       - ./acme/acme.json:/acme.json
+    healthcheck:
+      test: [ "CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:80/ping" ]
+      interval: 30s
+      retries: 10
 
   # nginx:
   #   <<: *service
