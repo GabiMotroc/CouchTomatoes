@@ -1,10 +1,6 @@
 
 # Services Section
 - Media:
-    - Plex:
-        icon: plex
-        href: http://plex.couch-tomatoes.me
-        description: "Media streaming"
     - Jellyfin:
         icon: jellyfin
         href: http://jellyfin.couch-tomatoes.me
