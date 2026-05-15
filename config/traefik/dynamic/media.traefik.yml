@@ -14,7 +14,7 @@ http:
     jellyfin:
       rule: 'Host(`{{env "JELLYFIN_NAME"}}.{{env "DOMAIN"}}`)'
       entryPoints:
-        - "jellyfin-public"
+        - "websecure-public"
       service: jellyfin
       tls:
         certResolver: letsencrypt
@@ -22,11 +22,11 @@ http:
           - main: '{{env "DOMAIN"}}'
           - sans: '*.{{env "DOMAIN"}}'
 
-    jellyseerr:
-      rule: 'Host(`{{env "JELLYSEERR_NAME"}}.{{env "DOMAIN"}}`)'
+    seerr:
+      rule: 'Host(`{{env "SEERR_NAME"}}.{{env "DOMAIN"}}`)'
       entryPoints:
-        - "websecure"
-      service: jellyseerr
+        - "websecure-public"
+      service: seerr
       tls:
         certResolver: letsencrypt
         domains:
@@ -45,7 +45,7 @@ http:
         servers:
           - url: http://{{env "JELLYFIN_NAME"}}:{{env "JELLYFIN_PORT"}}/
 
-    jellyseerr:
+    seerr:
       loadBalancer:
         servers:
-          - url: http://{{env "JELLYSEERR_NAME"}}:{{env "JELLYSEERR_PORT"}}/
+          - url: http://{{env "SEERR_NAME"}}:{{env "SEERR_PORT"}}/

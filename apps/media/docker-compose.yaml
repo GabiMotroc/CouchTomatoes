@@ -31,16 +31,16 @@ services:
       - shows:/data/tvshows
       - movies:/data/movies
 
-  jellyseerr:
+  seerr:
     <<: *service
     image: ghcr.io/seerr-team/seerr:latest
     init: true
-    container_name: ${JELLYSEERR_NAME}
+    container_name: ${SEERR_NAME}
     environment:
       - LOG_LEVEL=debug
       - JELLYFIN_TYPE=jellyfin
       - TZ=${TIMEZONE}
     # ports:
-    #   - ${JELLYSEERR_PORT}:${JELLYSEERR_PORT}
+    #   - ${SEERR_PORT}:${SEERR_PORT}
     volumes:
-      - ./jellyseerr:/app/config
+      - ./seerr:/app/config
