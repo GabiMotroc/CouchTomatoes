@@ -1,0 +1,12 @@
+http:
+  routers:
+    traefik:
+      rule: 'Host(`traefik.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: api@internal
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'

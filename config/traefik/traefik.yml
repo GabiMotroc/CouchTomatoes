@@ -14,7 +14,6 @@ entryPoints:
     address: ":8082"
 
 api:
-  insecure: true
   dashboard: true
 
 providers:
@@ -42,4 +41,4 @@ metrics:
 
 accessLog: {}
 log:
-  level: DEBUG
+  level: INFO

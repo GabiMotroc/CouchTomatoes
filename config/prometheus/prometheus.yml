@@ -9,4 +9,19 @@ scrape_configs:
   - job_name: 'traefik'
     static_configs:
       - targets: ["traefik:8082"]
- 
+
+  - job_name: 'exportarr-radarr'
+    static_configs:
+      - targets: ["exportarr-radarr:9707"]
+
+  - job_name: 'exportarr-sonarr'
+    static_configs:
+      - targets: ["exportarr-sonarr:9708"]
+
+  - job_name: 'exportarr-prowlarr'
+    static_configs:
+      - targets: ["exportarr-prowlarr:9709"]
+
+  - job_name: 'exportarr-bazarr'
+    static_configs:
+      - targets: ["exportarr-bazarr:9710"]
