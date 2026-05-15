@@ -7,3 +7,7 @@ config/qbittorrent/qBittorrent/
 config/.env
 *.env
 !*.env.example
+
+# OpenCode agents and tickets
+.opencode/
+tickets/
