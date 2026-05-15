@@ -48,10 +48,10 @@ server {
 
 server {
     listen 80;
-    server_name ${JELLYSEERR_NAME}.${DOMAIN};
+    server_name ${SEERR_NAME}.${DOMAIN};
 
     location / {
-        proxy_pass http://${JELLYSEERR_NAME}:${JELLYSEERR_PORT}/;
+        proxy_pass http://${SEERR_NAME}:${SEERR_PORT}/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

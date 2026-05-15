@@ -8,6 +8,8 @@ entryPoints:
           scheme: https
   websecure:
     address: :443
+  websecure-public:
+    address: ":8443"
   metrics:
     address: ":8082"
 
