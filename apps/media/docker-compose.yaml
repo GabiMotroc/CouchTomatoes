@@ -24,7 +24,7 @@ services:
 
   jellyfin:
     <<: *user
-    image: jellyfin/jellyfin    
+    image: jellyfin/jellyfin:latest
     container_name: ${JELLYFIN_NAME}
     volumes:
       - ./jellyfin:/config
@@ -32,12 +32,14 @@ services:
       - movies:/data/movies
 
   jellyseerr:
-    <<: *user
-    image: fallenbagel/jellyseerr:latest
+    <<: *service
+    image: ghcr.io/seerr-team/seerr:latest
+    init: true
     container_name: ${JELLYSEERR_NAME}
     environment:
       - LOG_LEVEL=debug
       - JELLYFIN_TYPE=jellyfin
+      - TZ=${TIMEZONE}
     # ports:
     #   - ${JELLYSEERR_PORT}:${JELLYSEERR_PORT}
     volumes:
