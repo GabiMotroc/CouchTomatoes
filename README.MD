@@ -21,7 +21,7 @@ The project uses a modular `docker-compose` architecture, splitting services int
 ## 🚀 Services
 
 ### 🎬 Media & Streaming
-- **Plex / Emby**: High-performance media streaming servers.
+- **Emby**, **Jellyfin**: High-performance media streaming servers.
 - **Jellyseerr**: A user-friendly request management system for your media library.
 
 ### 🤖 Automation
@@ -176,7 +176,6 @@ chmod 644 config/otel/otel-collector-config.yaml
 All services are accessible via subdomains on your configured `DOMAIN`. Traefik handles the routing and SSL termination automatically.
 
 - **Dashboard**: `homarr.yourdomain.com`
-- **Plex**: `plex.yourdomain.com`
 - **Sonarr/Radarr**: `sonarr.yourdomain.com`, `radarr.yourdomain.com`
 - **...and so on.**
 

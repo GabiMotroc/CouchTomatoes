@@ -31,27 +31,13 @@ services:
       - shows:/data/tvshows
       - movies:/data/movies
 
-  plex:
-    <<: *user
-    image: lscr.io/linuxserver/plex:latest
-    container_name: ${PLEX_NAME}
-    environment:
-      - VERSION=docker
-    volumes:
-      - ./plex:/config
-      - movies:/movies
-      - shows:/tv
-    # ports:
-    #   - 32469:32469/udp
-    #   - ${PLEX_PORT}:${PLEX_PORT}
-
   jellyseerr:
     <<: *user
     image: fallenbagel/jellyseerr:latest
     container_name: ${JELLYSEERR_NAME}
     environment:
       - LOG_LEVEL=debug
-      - JELLYFIN_TYPE=emby
+      - JELLYFIN_TYPE=jellyfin
     # ports:
     #   - ${JELLYSEERR_PORT}:${JELLYSEERR_PORT}
     volumes:
