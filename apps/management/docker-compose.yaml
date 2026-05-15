@@ -19,7 +19,7 @@ services:
       - ./homarr/appdata:/appdata
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - SECRET_ENCRYPTION_KEY=48184b13aa18eac953c25ce3dcce00dfc9e86d0ff743520c974826d8ef43bb03
+      - SECRET_ENCRYPTION_KEY=${SECRET_ENCRYPTION_KEY}
     # ports:
     #   - ${HOMARR_PORT}:${HOMARR_PORT}
 

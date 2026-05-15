@@ -26,6 +26,10 @@ services:
     <<: *user
     image: jellyfin/jellyfin:latest
     container_name: ${JELLYFIN_NAME}
+    group_add:
+      - "992"
+    devices:
+      - /dev/dri:/dev/dri
     volumes:
       - ./jellyfin:/config
       - shows:/data/tvshows
