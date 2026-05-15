@@ -26,7 +26,7 @@ services:
   filebrowser:
     <<: *user
     container_name: ${FILEBROWSER_NAME}
-    image: hurlenko/filebrowser
+    image: hurlenko/filebrowser:latest
     # ports:
     #   - ${FILEBROWSER_PORT}:${FILEBROWSER_INT_PORT}
     volumes:
@@ -48,7 +48,7 @@ services:
 
   n8n:
     <<: *service
-    image: docker.n8n.io/n8nio/n8n
+    image: docker.n8n.io/n8nio/n8n:latest
     container_name: ${N8N_NAME}
     environment:
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
