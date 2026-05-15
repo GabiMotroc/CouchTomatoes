@@ -1,3 +1,9 @@
 ﻿password.txt
 
 config/qbittorrent/qBittorrent/
+
+# Environment files — contain secrets, never commit
+.env
+config/.env
+*.env
+!*.env.example
