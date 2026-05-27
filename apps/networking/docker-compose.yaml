@@ -11,6 +11,21 @@ x-user: &user
     - TZ=${TIMEZONE}
 
 services:
+  adguard:
+    <<: *service
+    image: adguard/adguardhome:latest
+    container_name: ${ADGUARD_NAME}
+    ports:
+      - 53:53/tcp
+      - 53:53/udp
+    volumes:
+      - ./adguard/work:/opt/adguardhome/work
+      - ./adguard/conf:/opt/adguardhome/conf
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "https://${ADGUARD_NAME}.${DOMAIN}/"]
+      interval: 30s
+      retries: 10
+
   traefik:
     <<: *service
     image: traefik:latest
