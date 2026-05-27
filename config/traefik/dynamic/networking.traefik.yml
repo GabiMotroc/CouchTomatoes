@@ -26,4 +26,4 @@ http:
     adguard:
       loadBalancer:
         servers:
-          - url: "http://{{env "ADGUARD_NAME"}}:80"
+          - url: "http://{{env "ADGUARD_NAME"}}:{{env "ADGUARD_PORT"}}"
