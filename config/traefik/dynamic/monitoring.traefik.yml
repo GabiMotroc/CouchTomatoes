@@ -22,7 +22,23 @@ http:
           - main: '{{env "DOMAIN"}}'
           - sans: '*.{{env "DOMAIN"}}'
 
+    uptime-kuma:
+      rule: 'Host(`{{env "UPTIME_KUMA_NAME"}}.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: uptime-kuma
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
+
   services:
+    uptime-kuma:
+      loadBalancer:
+        servers:
+          - url: http://{{env "UPTIME_KUMA_NAME"}}:{{env "UPTIME_KUMA_PORT"}}/
+
     grafana:
       loadBalancer:
         servers:

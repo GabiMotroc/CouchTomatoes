@@ -126,6 +126,17 @@ services:
       URL: http://bazarr:6767
       APIKEY: ${BAZARR_API_KEY}
 
+  uptime-kuma:
+    <<: *service
+    image: louislam/uptime-kuma:latest
+    container_name: ${UPTIME_KUMA_NAME}
+    volumes:
+      - ./uptime-kuma:/app/data
+    healthcheck:
+      test: [ "CMD", "wget", "-q", "-O", "/dev/null", "https://${UPTIME_KUMA_NAME}.${DOMAIN}/" ]
+      interval: 30s
+      retries: 10
+
 volumes:
   prometheus:
   grafana:
