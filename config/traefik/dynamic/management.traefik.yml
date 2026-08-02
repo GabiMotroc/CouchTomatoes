@@ -32,16 +32,6 @@ http:
           - sans: '*.{{env "DOMAIN"}}'
 
 
-    portainer:
-      rule: 'Host(`{{env "PORTAINER_NAME"}}.{{env "DOMAIN"}}`)'
-      entryPoints:
-        - "websecure"
-      service: portainer
-      tls:
-        certResolver: letsencrypt
-        domains:
-          - main: '{{env "DOMAIN"}}'
-          - sans: '*.{{env "DOMAIN"}}'
 
     n8n:
       rule: 'Host(`{{env "N8N_NAME"}}.{{env "DOMAIN"}}`)'
@@ -65,11 +55,6 @@ http:
       loadBalancer:
         servers:
           - url: http://{{env "FILEBROWSER_NAME"}}:{{env "FILEBROWSER_PORT"}}/
-
-    portainer:
-      loadBalancer:
-        servers:
-          - url: http://{{env "PORTAINER_NAME"}}:{{env "PORTAINER_PORT"}}/
 
     n8n:
       loadBalancer:

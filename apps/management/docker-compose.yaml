@@ -44,16 +44,6 @@ services:
       interval: 30s
       retries: 10
 
-  portainer:
-    <<: *service
-    image: portainer/portainer-ce:latest
-    container_name: ${PORTAINER_NAME}
-    # ports:
-    #   - ${PORTAINER_PORT}:${PORTAINER_PORT}
-    volumes:
-      - ./portainer:/data
-      - /var/run/docker.sock:/var/run/docker.sock
-
   n8n:
     <<: *service
     image: docker.n8n.io/n8nio/n8n:latest

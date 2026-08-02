@@ -1,0 +1,34 @@
+http:
+  routers:
+    artvision:
+      rule: 'Host(`artvision.couch-tomatoes.me`)'
+      entryPoints:
+        - "websecure-public"
+      service: artvision
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: couch-tomatoes.me
+          - sans: '*.couch-tomatoes.me'
+
+    artvision-api:
+      rule: 'Host(`artvision-api.couch-tomatoes.me`)'
+      entryPoints:
+        - "websecure-public"
+      service: artvision-api
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: couch-tomatoes.me
+          - sans: '*.couch-tomatoes.me'
+
+  services:
+    artvision:
+      loadBalancer:
+        servers:
+          - url: http://192.168.0.55:5137
+
+    artvision-api:
+      loadBalancer:
+        servers:
+          - url: http://192.168.0.55:5166
