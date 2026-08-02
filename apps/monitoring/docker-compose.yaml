@@ -42,6 +42,14 @@ services:
     <<: *service
     image: grafana/grafana:latest
     container_name: ${GRAFANA_NAME}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.rule=Host(`${GRAFANA_NAME}.${DOMAIN}`)"
+      - "traefik.http.routers.grafana.entrypoints=websecure"
+      - "traefik.http.routers.grafana.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.grafana.tls.domains[0].main=${DOMAIN}"
+      - "traefik.http.routers.grafana.tls.domains[0].sans=*.${DOMAIN}"
+      - "traefik.http.services.grafana.loadbalancer.server.port=${GRAFANA_PORT}"
     ports:
       - ${GRAFANA_PORT}:${GRAFANA_PORT}
     volumes:
@@ -50,7 +58,7 @@ services:
       - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
       - ./grafana/dashboards:/etc/grafana/dashboards
     healthcheck:
-      test: [ "CMD", "wget", "-q", "-O", "/dev/null", "https://${GRAFANA_NAME}.${DOMAIN}/api/health" ]
+      test: [ "CMD", "wget", "-q", "-O", "/dev/null", "http://localhost:3000/api/health" ]
       interval: 30s
       retries: 10
 
@@ -58,6 +66,14 @@ services:
     <<: *service
     image: henrygd/beszel:latest
     container_name: ${BESZEL_NAME}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.beszel.rule=Host(`${BESZEL_NAME}.${DOMAIN}`)"
+      - "traefik.http.routers.beszel.entrypoints=websecure"
+      - "traefik.http.routers.beszel.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.beszel.tls.domains[0].main=${DOMAIN}"
+      - "traefik.http.routers.beszel.tls.domains[0].sans=*.${DOMAIN}"
+      - "traefik.http.services.beszel.loadbalancer.server.port=${BESZEL_PORT}"
     # ports:
     #   - ${BESZEL_PORT}:${BESZEL_PORT}
     volumes:
@@ -130,10 +146,18 @@ services:
     <<: *service
     image: louislam/uptime-kuma:latest
     container_name: ${UPTIME_KUMA_NAME}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.uptime-kuma.rule=Host(`${UPTIME_KUMA_NAME}.${DOMAIN}`)"
+      - "traefik.http.routers.uptime-kuma.entrypoints=websecure"
+      - "traefik.http.routers.uptime-kuma.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.uptime-kuma.tls.domains[0].main=${DOMAIN}"
+      - "traefik.http.routers.uptime-kuma.tls.domains[0].sans=*.${DOMAIN}"
+      - "traefik.http.services.uptime-kuma.loadbalancer.server.port=${UPTIME_KUMA_PORT}"
     volumes:
       - ./uptime-kuma:/app/data
     healthcheck:
-      test: [ "CMD", "wget", "-q", "-O", "/dev/null", "https://${UPTIME_KUMA_NAME}.${DOMAIN}/" ]
+      test: [ "CMD", "curl", "--fail", "http://localhost:${UPTIME_KUMA_PORT}/" ]
       interval: 30s
       retries: 10
 

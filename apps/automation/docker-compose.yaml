@@ -15,6 +15,14 @@ services:
     <<: *user
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: ${QBITTORRENT_NAME}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.qbittorrent.rule=Host(`${QBITTORRENT_NAME}.${DOMAIN}`)"
+      - "traefik.http.routers.qbittorrent.entrypoints=websecure"
+      - "traefik.http.routers.qbittorrent.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.qbittorrent.tls.domains[0].main=${DOMAIN}"
+      - "traefik.http.routers.qbittorrent.tls.domains[0].sans=*.${DOMAIN}"
+      - "traefik.http.services.qbittorrent.loadbalancer.server.port=${QBITTORRENT_PORT}"
     ports:
       - ${QBITTORRENT_PORT}:${QBITTORRENT_PORT}
       - 6881:6881
@@ -32,12 +40,20 @@ services:
     <<: *user
     image: lscr.io/linuxserver/radarr:latest
     container_name: ${RADARR_NAME}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.radarr.rule=Host(`${RADARR_NAME}.${DOMAIN}`)"
+      - "traefik.http.routers.radarr.entrypoints=websecure"
+      - "traefik.http.routers.radarr.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.radarr.tls.domains[0].main=${DOMAIN}"
+      - "traefik.http.routers.radarr.tls.domains[0].sans=*.${DOMAIN}"
+      - "traefik.http.services.radarr.loadbalancer.server.port=${RADARR_PORT}"
     volumes:
       - ./radarr:/config
       - movies:/movies
       - downloads:/downloads
     healthcheck:
-      test: [ "CMD", "curl", "--fail", "https://${RADARR_NAME}.${DOMAIN}/ping" ]
+      test: [ "CMD", "curl", "--fail", "http://localhost:${RADARR_PORT}/ping" ]
       interval: 30s
       retries: 10
     # ports:
@@ -47,12 +63,20 @@ services:
     <<: *user
     image: lscr.io/linuxserver/sonarr:latest
     container_name: ${SONARR_NAME}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sonarr.rule=Host(`${SONARR_NAME}.${DOMAIN}`)"
+      - "traefik.http.routers.sonarr.entrypoints=websecure"
+      - "traefik.http.routers.sonarr.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.sonarr.tls.domains[0].main=${DOMAIN}"
+      - "traefik.http.routers.sonarr.tls.domains[0].sans=*.${DOMAIN}"
+      - "traefik.http.services.sonarr.loadbalancer.server.port=${SONARR_PORT}"
     volumes:
       - ./sonarr:/config
       - shows:/tv
       - downloads:/downloads
     healthcheck:
-      test: [ "CMD", "curl", "--fail", "https://${SONARR_NAME}.${DOMAIN}/ping" ]
+      test: [ "CMD", "curl", "--fail", "http://localhost:${SONARR_PORT}/ping" ]
       interval: 30s
       retries: 10
     # ports:
@@ -62,10 +86,18 @@ services:
     <<: *user
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: ${PROWLARR_NAME}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.prowlarr.rule=Host(`${PROWLARR_NAME}.${DOMAIN}`)"
+      - "traefik.http.routers.prowlarr.entrypoints=websecure"
+      - "traefik.http.routers.prowlarr.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.prowlarr.tls.domains[0].main=${DOMAIN}"
+      - "traefik.http.routers.prowlarr.tls.domains[0].sans=*.${DOMAIN}"
+      - "traefik.http.services.prowlarr.loadbalancer.server.port=${PROWLARR_PORT}"
     volumes:
       - ./prowlarr:/config
     healthcheck:
-      test: [ "CMD", "curl", "--fail", "https://${PROWLARR_NAME}.${DOMAIN}/ping" ]
+      test: [ "CMD", "curl", "--fail", "http://localhost:${PROWLARR_PORT}/ping" ]
       interval: 30s
       retries: 10
     # ports:
@@ -74,13 +106,21 @@ services:
   bazarr:
     <<: *user
     image: lscr.io/linuxserver/bazarr:latest
-    container_name: bazarr
+    container_name: ${BAZARR_NAME}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bazarr.rule=Host(`${BAZARR_NAME}.${DOMAIN}`)"
+      - "traefik.http.routers.bazarr.entrypoints=websecure"
+      - "traefik.http.routers.bazarr.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.bazarr.tls.domains[0].main=${DOMAIN}"
+      - "traefik.http.routers.bazarr.tls.domains[0].sans=*.${DOMAIN}"
+      - "traefik.http.services.bazarr.loadbalancer.server.port=${BAZARR_PORT}"
     volumes:
       - ./bazarr:/config
       - shows:/tv
       - movies:/movies
     healthcheck:
-      test: [ "CMD", "curl", "--fail", "https://${BAZARR_NAME}.${DOMAIN}/health" ]
+      test: [ "CMD", "curl", "--fail", "http://localhost:${BAZARR_PORT}/health" ]
       interval: 30s
       retries: 10
 
@@ -88,6 +128,14 @@ services:
     <<: *service
     image: santiagosayshey/profilarr:latest
     container_name: ${PROFILARR_NAME}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.profilarr.rule=Host(`${PROFILARR_NAME}.${DOMAIN}`)"
+      - "traefik.http.routers.profilarr.entrypoints=websecure"
+      - "traefik.http.routers.profilarr.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.profilarr.tls.domains[0].main=${DOMAIN}"
+      - "traefik.http.routers.profilarr.tls.domains[0].sans=*.${DOMAIN}"
+      - "traefik.http.services.profilarr.loadbalancer.server.port=${PROFILARR_PORT}"
     environment:
       - TZ=${TIMEZONE}
     volumes:

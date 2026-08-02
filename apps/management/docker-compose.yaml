@@ -15,6 +15,18 @@ services:
     <<: *user
     image: ghcr.io/homarr-labs/homarr:latest
     container_name: ${HOMARR_NAME}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.domain.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.domain.entrypoints=websecure"
+      - "traefik.http.routers.domain.service=homarr"
+      - "traefik.http.routers.domain.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.homarr.rule=Host(`${HOMARR_NAME}.${DOMAIN}`)"
+      - "traefik.http.routers.homarr.entrypoints=websecure"
+      - "traefik.http.routers.homarr.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.homarr.tls.domains[0].main=${DOMAIN}"
+      - "traefik.http.routers.homarr.tls.domains[0].sans=*.${DOMAIN}"
+      - "traefik.http.services.homarr.loadbalancer.server.port=${HOMARR_PORT}"
     volumes:
       - ./homarr/appdata:/appdata
       - /var/run/docker.sock:/var/run/docker.sock
@@ -23,7 +35,7 @@ services:
     # ports:
     #   - ${HOMARR_PORT}:${HOMARR_PORT}
     healthcheck:
-      test: [ "CMD", "wget", "-q", "-O", "/dev/null", "https://${HOMARR_NAME}.${DOMAIN}/api/health" ]
+      test: [ "CMD", "wget", "-q", "-O", "/dev/null", "http://localhost:${HOMARR_PORT}/" ]
       interval: 30s
       retries: 10
 
@@ -31,6 +43,14 @@ services:
     <<: *user
     container_name: ${FILEBROWSER_NAME}
     image: hurlenko/filebrowser:latest
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.filebrowser.rule=Host(`${FILEBROWSER_NAME}.${DOMAIN}`)"
+      - "traefik.http.routers.filebrowser.entrypoints=websecure"
+      - "traefik.http.routers.filebrowser.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.filebrowser.tls.domains[0].main=${DOMAIN}"
+      - "traefik.http.routers.filebrowser.tls.domains[0].sans=*.${DOMAIN}"
+      - "traefik.http.services.filebrowser.loadbalancer.server.port=${FILEBROWSER_PORT}"
     # ports:
     #   - ${FILEBROWSER_PORT}:${FILEBROWSER_INT_PORT}
     volumes:
@@ -40,7 +60,7 @@ services:
       - movies:/data/movies
       - shows:/data/shows
     healthcheck:
-      test: [ "CMD", "wget", "-q", "-O", "/dev/null", "https://${FILEBROWSER_NAME}.${DOMAIN}/health" ]
+      test: [ "CMD", "wget", "-q", "-O", "/dev/null", "http://localhost:${FILEBROWSER_PORT}/health" ]
       interval: 30s
       retries: 10
 
@@ -48,6 +68,14 @@ services:
     <<: *service
     image: docker.n8n.io/n8nio/n8n:latest
     container_name: ${N8N_NAME}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.n8n.rule=Host(`${N8N_NAME}.${DOMAIN}`)"
+      - "traefik.http.routers.n8n.entrypoints=websecure"
+      - "traefik.http.routers.n8n.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.n8n.tls.domains[0].main=${DOMAIN}"
+      - "traefik.http.routers.n8n.tls.domains[0].sans=*.${DOMAIN}"
+      - "traefik.http.services.n8n.loadbalancer.server.port=${N8N_PORT}"
     environment:
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
       - N8N_HOST=${N8N_NAME}.${DOMAIN}
@@ -60,6 +88,6 @@ services:
       - ./n8n:/home/node/.n8n
       - ./n8n_files:/files
     healthcheck:
-      test: [ "CMD", "wget", "-q", "-O", "/dev/null", "https://${N8N_NAME}.${DOMAIN}/healthz" ]
+      test: [ "CMD", "wget", "-q", "-O", "/dev/null", "http://localhost:${N8N_PORT}/healthz" ]
       interval: 30s
       retries: 10

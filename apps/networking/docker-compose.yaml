@@ -15,6 +15,14 @@ services:
     <<: *service
     image: adguard/adguardhome:latest
     container_name: ${ADGUARD_NAME}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.adguard.rule=Host(`${ADGUARD_NAME}.${DOMAIN}`)"
+      - "traefik.http.routers.adguard.entrypoints=websecure"
+      - "traefik.http.routers.adguard.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.adguard.tls.domains[0].main=${DOMAIN}"
+      - "traefik.http.routers.adguard.tls.domains[0].sans=*.${DOMAIN}"
+      - "traefik.http.services.adguard.loadbalancer.server.port=${ADGUARD_PORT}"
     ports:
       - 53:53/tcp
       - 53:53/udp
@@ -22,7 +30,7 @@ services:
       - ./adguard/work:/opt/adguardhome/work
       - ./adguard/conf:/opt/adguardhome/conf
     healthcheck:
-      test: ["CMD", "wget", "-q", "-O", "/dev/null", "https://${ADGUARD_NAME}.${DOMAIN}/"]
+      test: [ "CMD", "wget", "-q", "-O", "/dev/null", "http://localhost:${ADGUARD_PORT}/" ]
       interval: 30s
       retries: 10
 
@@ -30,6 +38,14 @@ services:
     <<: *service
     image: traefik:latest
     container_name: traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.traefik.tls.domains[0].main=${DOMAIN}"
+      - "traefik.http.routers.traefik.tls.domains[0].sans=*.${DOMAIN}"
+      - "traefik.http.routers.traefik.service=api@internal"
     env_file:
       - .env
     ports:

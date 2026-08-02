@@ -15,6 +15,14 @@ services:
     <<: *user
     image: lscr.io/linuxserver/emby:latest
     container_name: ${EMBY_NAME}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.emby.rule=Host(`${EMBY_NAME}.${DOMAIN}`)"
+      - "traefik.http.routers.emby.entrypoints=websecure"
+      - "traefik.http.routers.emby.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.emby.tls.domains[0].main=${DOMAIN}"
+      - "traefik.http.routers.emby.tls.domains[0].sans=*.${DOMAIN}"
+      - "traefik.http.services.emby.loadbalancer.server.port=${EMBY_PORT}"
     volumes:
       - ./emby:/config
       - shows:/data/tvshows
@@ -22,7 +30,7 @@ services:
     # ports:
     #   - ${EMBY_PORT}:${EMBY_PORT}
     healthcheck:
-      test: [ "CMD", "curl", "--fail", "https://${EMBY_NAME}.${DOMAIN}/emby/system/ping" ]
+      test: [ "CMD", "curl", "--fail", "http://localhost:8096/emby/system/ping" ]
       interval: 30s
       retries: 10
 
@@ -56,6 +64,14 @@ services:
     image: ghcr.io/seerr-team/seerr:latest
     init: true
     container_name: ${SEERR_NAME}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.seerr.rule=Host(`${SEERR_NAME}.${DOMAIN}`)"
+      - "traefik.http.routers.seerr.entrypoints=websecure-public"
+      - "traefik.http.routers.seerr.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.seerr.tls.domains[0].main=${DOMAIN}"
+      - "traefik.http.routers.seerr.tls.domains[0].sans=*.${DOMAIN}"
+      - "traefik.http.services.seerr.loadbalancer.server.port=${SEERR_PORT}"
     environment:
       - LOG_LEVEL=debug
       - JELLYFIN_TYPE=jellyfin
