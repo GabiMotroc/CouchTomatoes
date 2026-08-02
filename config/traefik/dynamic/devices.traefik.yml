@@ -1,0 +1,55 @@
+http:
+  serversTransports:
+    lan-insecure:
+      insecureSkipVerify: true
+
+  routers:
+    fry:
+      rule: 'Host(`fry.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: fry
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
+
+    zoidberg:
+      rule: 'Host(`zoidberg.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: zoidberg
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
+
+    klipper:
+      rule: 'Host(`nibbler.{{env "DOMAIN"}}`)'
+      entryPoints:
+        - "websecure"
+      service: klipper
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: '{{env "DOMAIN"}}'
+          - sans: '*.{{env "DOMAIN"}}'
+
+  services:
+    fry:
+      loadBalancer:
+        servers:
+          - url: http://192.168.0.30:7777
+
+    zoidberg:
+      loadBalancer:
+        serversTransport: lan-insecure
+        servers:
+          - url: https://192.168.0.20
+
+    klipper:
+      loadBalancer:
+        servers:
+          - url: http://192.168.0.35
